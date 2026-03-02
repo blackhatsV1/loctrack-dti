@@ -30,6 +30,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
     Route::get('/employees/{user}/history', [AdminController::class, 'locationHistory'])->name('admin.employees.history');
 
     Route::get('/api/locations', [LocationController::class, 'index'])->name('location.index');
+    Route::put('/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
 });
 
 require __DIR__.'/auth.php';

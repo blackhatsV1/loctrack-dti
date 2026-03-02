@@ -113,7 +113,15 @@
                     @php $loc = $emp->locations->first(); @endphp
                     <tr>
                         <td>
-                            <div style="font-weight: 500;">{{ $emp->name }}</div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="font-weight: 500;">{{ $emp->name }}</div>
+                                @if($emp->is_admin)
+                                    <span style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 500; border: 1px solid rgba(16, 185, 129, 0.3);">Admin</span>
+                                @endif
+                                @if($emp->name === 'Admin' && !$emp->is_admin)
+                                    <span style="font-size: 0.7rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 500; border: 1px solid rgba(99, 102, 241, 0.3);">KML Entry</span>
+                                @endif
+                            </div>
                             <div style="color: var(--text-muted); font-size: 0.8rem;">{{ $emp->email }}</div>
                         </td>
                         <td>{{ $loc->employee_id_no ?? '—' }}</td>

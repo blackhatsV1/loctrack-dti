@@ -2,19 +2,18 @@
 
 @section('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     .stat-card {
         cursor: pointer;
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease;
     }
     .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
-        border-color: rgba(99, 102, 241, 0.4);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
     }
     .stat-card.active {
         border-color: var(--primary);
-        box-shadow: 0 0 0 2px var(--primary);
     }
     .dashboard-section {
         display: none;
@@ -24,11 +23,10 @@
     .dashboard-section.active {
         display: block;
     }
-    .mini-map {
+    .chart-container {
+        position: relative;
         height: 300px;
-        border-radius: 1rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid var(--glass-border);
+        width: 100%;
     }
     .table-container {
         max-height: 400px;
@@ -79,45 +77,54 @@
         outline: none;
         border-color: var(--primary);
     }
-    .link-btn {
-        color: var(--primary);
-        text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 500;
-    }
-    .link-btn:hover {
-        text-decoration: underline;
-    }
 </style>
 @endsection
 
 @section('content')
 <div class="animate-fade-in">
     <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Admin Dashboard</h1>
-    <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Overview of your workforce tracking system.</p>
+    <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Real-time workforce distribution and analytics.</p>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
         <div class="glass-card stat-card" id="card-employees" onclick="window.location.href='{{ route('admin.employees') }}'">
-            <div style="font-size: 2.5rem; font-weight: 600; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <div style="font-size: 2.5rem; font-weight: 600; color: #818cf8;">
                 {{ $totalEmployees }}
             </div>
-            <div style="color: var(--text-muted); margin-top: 0.5rem;">Total Employees</div>
+            <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Total Personnel</div>
         </div>
-        <div class="glass-card stat-card" id="card-locations" onclick="toggleDashboardSection('locations')">
-            <div style="font-size: 2.5rem; font-weight: 600; background: linear-gradient(to right, #34d399, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        <div class="glass-card stat-card" id="card-updates" onclick="toggleDashboardSection('locations')">
+            <div style="font-size: 2.5rem; font-weight: 600; color: #34d399;">
                 {{ $totalLocations }}
             </div>
-            <div style="color: var(--text-muted); margin-top: 0.5rem;">Location Records</div>
+            <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Active Locations</div>
         </div>
         <div class="glass-card stat-card" id="card-offices" onclick="toggleDashboardSection('offices')">
-            <div style="font-size: 2.5rem; font-weight: 600; background: linear-gradient(to right, #f472b6, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <div style="font-size: 2.5rem; font-weight: 600; color: #f472b6;">
                 {{ $totalOffices }}
             </div>
-            <div style="color: var(--text-muted); margin-top: 0.5rem;">Offices</div>
+            <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Active Offices</div>
+        </div>
+        <div class="glass-card stat-card" id="card-map" onclick="window.location.href='{{ route('admin.map') }}'">
+            <div style="font-size: 2.5rem; font-weight: 600;">🌍</div>
+            <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Global View</div>
         </div>
     </div>
 
-    <!-- Total Employees section removed as it now redirects -->
+    <!-- Analytics Section -->
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="glass-card">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-light);">Office Distribution</h3>
+            <div class="chart-container">
+                <canvas id="officeChart"></canvas>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-light);">Personnel Type Breakdown</h3>
+            <div class="chart-container">
+                <canvas id="typeChart"></canvas>
+            </div>
+        </div>
+    </div>
 
     <!-- Location Records Section -->
     <div id="section-locations" class="dashboard-section animate-fade-in">
@@ -125,7 +132,7 @@
             <h2 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                 📍 Location Records
             </h2>
-            <input type="text" id="power-search" class="search-input" placeholder="Power Search: Find by name, address, or office..." onkeyup="powerSearch()">
+            <input type="text" id="power-search" class="search-input" placeholder="Power Search: Find by name, address, or office..." onkeyup="powerSearch('location-table', 'power-search')">
             <div class="table-container">
                 <table class="data-table" id="location-table">
                     <thead>
@@ -139,7 +146,15 @@
                     <tbody>
                         @foreach($recentLocations as $loc)
                         <tr class="search-row">
-                            <td class="searchable">{{ $loc->user->name }}</td>
+                            <td class="searchable">
+                                {{ $loc->user->name }}
+                                @if($loc->user->name === 'Admin' && !$loc->user->is_admin)
+                                    <span style="font-size: 0.75rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 0.2rem 0.5rem; border-radius: 9999px; margin-left: 0.5rem; font-weight: 500;">KML Entry</span>
+                                @endif
+                                @if($loc->user->is_admin)
+                                    <span style="font-size: 0.75rem; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.2rem 0.5rem; border-radius: 9999px; margin-left: 0.5rem; font-weight: 500;">Master Admin</span>
+                                @endif
+                            </td>
                             <td class="searchable" style="max-width: 300px;">{{ $loc->address }}</td>
                             <td class="searchable">{{ $loc->office ?? 'N/A' }}</td>
                             <td>{{ $loc->recorded_at->format('M d, Y h:i A') }}</td>
@@ -157,9 +172,9 @@
             <h2 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                 🏢 Office Locations
             </h2>
-            <div id="map-offices" class="mini-map"></div>
+            <input type="text" id="office-search" class="search-input" placeholder="Search offices..." onkeyup="powerSearch('office-table', 'office-search')">
             <div class="table-container">
-                <table class="data-table">
+                <table class="data-table" id="office-table">
                     <thead>
                         <tr>
                             <th style="position: sticky; top: 0; background: var(--bg-dark); z-index: 1;">Office Name</th>
@@ -169,8 +184,8 @@
                     </thead>
                     <tbody>
                         @foreach($offices as $office)
-                        <tr>
-                            <td>{{ $office }}</td>
+                        <tr class="search-row">
+                            <td class="searchable">{{ $office }}</td>
                             <td>
                                 @php
                                     $officeLoc = $latestLocations->where('office', $office)->first();
@@ -186,16 +201,6 @@
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-        <a href="{{ route('admin.employees') }}" class="glass-card" style="padding: 2rem; text-decoration: none; color: var(--text-light); transition: transform 0.2s;">
-            <h3 style="margin-bottom: 0.5rem;">👥 Manage Employees</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">View, search, and edit employee information.</p>
-        </a>
-        <a href="{{ route('admin.map') }}" class="glass-card" style="padding: 2rem; text-decoration: none; color: var(--text-light); transition: transform 0.2s;">
-            <h3 style="margin-bottom: 0.5rem;">🗺️ Real-time Map</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Visualize all employee locations on the map.</p>
-        </a>
-    </div>
 </div>
 @endsection
 
@@ -209,13 +214,127 @@
 
     const latestLocations = @json($latestLocations);
     const offices = @json($offices);
+    const officeData = @json($officeDistribution);
+    const typeData = @json($typeDistribution);
+
+    // Common Chart Configuration
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#94a3b8',
+                    font: { family: 'Outfit', size: 12, weight: '500' },
+                    padding: 25,
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                titleColor: '#f8fafc',
+                bodyColor: '#94a3b8',
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true,
+                usePointStyle: true,
+                cornerRadius: 8,
+                titleFont: { family: 'Outfit', size: 14, weight: '600' },
+                bodyFont: { family: 'Outfit', size: 13 }
+            }
+        }
+    };
+
+    // Office Distribution Chart
+    new Chart(document.getElementById('officeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(officeData),
+            datasets: [{
+                data: Object.values(officeData),
+                backgroundColor: [
+                    '#6366f1', // Indigo
+                    '#10b981', // Emerald
+                    '#3b82f6', // Blue
+                    '#8b5cf6', // Violet
+                    '#f43f5e', // Rose
+                    '#f59e0b', // Amber
+                    '#06b6d4'  // Cyan
+                ],
+                borderWidth: 2,
+                borderColor: '#1e293b',
+                hoverOffset: 15,
+                hoverBorderWidth: 4
+            }]
+        },
+        options: {
+            ...chartOptions,
+            cutout: '75%',
+            spacing: 5
+        }
+    });
+
+    // Personnel Type Distribution Chart
+    const ctx = document.getElementById('typeChart').getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
+    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.1)');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(typeData),
+            datasets: [{
+                label: 'Personnel Count',
+                data: Object.values(typeData),
+                backgroundColor: gradient,
+                borderColor: '#818cf8',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false,
+                barThickness: 40
+            }]
+        },
+        options: {
+            ...chartOptions,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { 
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: { 
+                        color: '#94a3b8', 
+                        stepSize: 1,
+                        font: { family: 'Outfit' }
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { 
+                        color: '#94a3b8',
+                        font: { family: 'Outfit' }
+                    }
+                }
+            },
+            plugins: {
+                ...chartOptions.plugins,
+                legend: { display: false }
+            }
+        }
+    });
 
     function toggleDashboardSection(sectionId) {
         const sections = ['locations', 'offices'];
         
         sections.forEach(s => {
             const section = document.getElementById('section-' + s);
-            const card = document.getElementById('card-' + s);
+            const cardId = s === 'locations' ? 'card-updates' : 'card-' + s;
+            const card = document.getElementById(cardId);
             
             if (s === sectionId) {
                 if (section.classList.contains('active')) {
@@ -224,52 +343,20 @@
                 } else {
                     section.classList.add('active');
                     card.classList.add('active');
-                    
-                    // Initialize map if needed
-                    if (s === 'offices' && !maps.offices) {
-                        initOfficesMap();
-                    }
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } else {
                 section.classList.remove('active');
-                card.classList.remove('active');
+                if (card) card.classList.remove('active');
             }
         });
     }
 
-    // initEmployeesMap removed as it's no longer used in dashboard toggles
-
-    function initOfficesMap() {
-        maps.offices = L.map('map-offices').setView([10.69, 122.52], 8);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CARTO'
-        }).addTo(maps.offices);
-
-        const markers = [];
-        offices.forEach(officeName => {
-            const loc = latestLocations.find(l => l.office === officeName);
-            if (loc && loc.latitude && loc.longitude) {
-                const marker = L.marker([loc.latitude, loc.longitude], {
-                    icon: L.divIcon({
-                        html: `<div style="background: var(--primary); width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px var(--primary);"></div>`,
-                        className: '',
-                        iconSize: [12, 12]
-                    })
-                }).bindPopup(`<b>Office: ${officeName}</b>`)
-                  .addTo(maps.offices);
-                markers.push([loc.latitude, loc.longitude]);
-            }
-        });
-
-        if (markers.length > 0) {
-            maps.offices.fitBounds(markers);
-        }
-    }
-
-    function powerSearch() {
-        const input = document.getElementById('power-search');
+    function powerSearch(tableId, inputId) {
+        const input = document.getElementById(inputId);
         const filter = input.value.toLowerCase();
-        const rows = document.querySelectorAll('.search-row');
+        const table = document.getElementById(tableId);
+        const rows = table.querySelectorAll('.search-row');
 
         rows.forEach(row => {
             const text = Array.from(row.querySelectorAll('.searchable'))
@@ -284,10 +371,8 @@
         });
     }
 
-    // Delay initialization slightly to ensure container is ready
     window.addEventListener('resize', () => {
-        if (maps.employees) maps.employees.invalidateSize();
-        if (maps.offices) maps.offices.invalidateSize();
+        // Redraw charts if needed, Chart.js handles most of it via responsive: true
     });
 </script>
 @endsection

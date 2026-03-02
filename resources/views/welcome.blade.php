@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="animate-fade-in text-center" style="max-width: 800px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" style="height: 100px; width: auto;">
+    </div>
     <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 600; line-height: 1.1;">
         Track Your Team in <br>
         <span style="background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Real-Time</span>

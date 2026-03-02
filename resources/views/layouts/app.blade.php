@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Employee Tracker') }}</title>
+    <title>DTI | Employee Locator</title>
+    <link rel="icon" type="image/png" href="{{ asset('dti-logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -48,7 +49,19 @@
             z-index: 100;
         }
 
-        .logo {
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-text {
             font-size: 1.5rem;
             font-weight: 600;
             letter-spacing: -0.025em;
@@ -95,6 +108,79 @@
             letter-spacing: 0.05em;
             margin-left: 0.5rem;
             vertical-align: middle;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-badge:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         main {
@@ -172,14 +258,17 @@
 </head>
 <body>
     <nav>
-        <div class="logo">LocTrack Pro</div>
+        <a href="{{ url('/') }}" class="logo-container">
+            <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" class="logo-img">
+            <span class="logo-text">LocTrack Pro</span>
+        </a>
         <div class="nav-links">
             @auth
                 @if(auth()->user()->is_admin)
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
                     <a href="{{ route('admin.employees') }}" class="{{ request()->routeIs('admin.employees*') ? 'active' : '' }}">Employees</a>
                     <a href="{{ route('admin.map') }}" class="{{ request()->routeIs('admin.map') ? 'active' : '' }}">Map</a>
-                    <span class="nav-badge">Admin</span>
+                    <span class="nav-badge" onclick="toggleProfileModal()">Admin</span>
                 @else
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">My Tracker</a>
                 @endif
@@ -193,17 +282,64 @@
         </div>
     </nav>
 
+    @auth
+        <!-- Profile Modal -->
+        <div id="profile-modal" class="modal-overlay" onclick="if(event.target === this) toggleProfileModal()">
+            <div class="modal-content">
+                <h2 style="margin-bottom: 1.5rem;">Update Profile</h2>
+                <form action="{{ route('admin.profile.update') }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" value="{{ auth()->user()->name }}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" value="{{ auth()->user()->email }}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password (Optional)</label>
+                        <input type="password" name="password" class="form-control" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" name="password_confirmation" class="form-control" autocomplete="new-password">
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" style="flex: 2;">Update Details</button>
+                        <button type="button" class="btn btn-ghost" style="flex: 1; background: rgba(255,255,255,0.05); color: var(--text-muted);" onclick="toggleProfileModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endauth
+
     <main>
         <div class="container">
             @if(session('success'))
                 <div class="alert-success">{{ session('success') }}</div>
             @endif
-            @if(session('error'))
-                <div class="alert-error">{{ session('error') }}</div>
+            @if($errors->any())
+                <div class="alert-error">
+                    <ul style="list-style: none; padding: 0;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
             @yield('content')
         </div>
     </main>
+    <script>
+        function toggleProfileModal() {
+            const modal = document.getElementById('profile-modal');
+            if (modal) {
+                modal.classList.toggle('active');
+            }
+        }
+    </script>
     @yield('scripts')
 </body>
 </html>

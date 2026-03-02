@@ -14,7 +14,7 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::where('is_admin', false);
+        $query = User::query();
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -31,7 +31,10 @@ class AdminController extends Controller
 
         $employees = $query->with(['locations' => function ($q) {
             $q->latest('id')->limit(1);
-        }])->paginate(20);
+        }])
+        ->orderByRaw('id = ? DESC', [auth()->id()])
+        ->orderBy('name')
+        ->paginate(20);
 
         // Get unique offices for filter dropdown
         $offices = EmployeeLocation::select('office')
@@ -111,16 +114,22 @@ class AdminController extends Controller
     public function dashboard()
     {
         $totalEmployees = User::where('is_admin', false)->count();
-        $totalLocations = EmployeeLocation::count();
+        $totalLocations = EmployeeLocation::whereHas('user', function($q) {
+                $q->where('is_admin', false);
+            })
+            ->distinct('user_id')
+            ->count();
+        $recentUpdatesCount = EmployeeLocation::whereHas('user', function($q) {
+                $q->where('is_admin', false);
+            })
+            ->where('recorded_at', '>=', now()->subDay())
+            ->count();
         
-        // Get all employees (non-admins) with their latest location
-        $employees = User::where('is_admin', false)
-            ->with(['locations' => function($query) {
-                $query->latest('id')->limit(1);
-            }])
-            ->get();
-
-        $latestLocations = EmployeeLocation::with('user')
+        // Get latest location for each non-admin user
+        $latestLocations = EmployeeLocation::whereHas('user', function($q) {
+                $q->where('is_admin', false);
+            })
+            ->with('user')
             ->whereIn('id', function($query) {
                 $query->selectRaw('max(id)')
                     ->from('employee_locations')
@@ -131,8 +140,29 @@ class AdminController extends Controller
         $offices = $latestLocations->pluck('office')->unique()->filter()->values();
         $totalOffices = $offices->count();
 
-        // Get recent location records for the "Location Records" table
-        $recentLocations = EmployeeLocation::with('user')
+        // Data for Office Distribution Chart (Non-Admins only)
+        $officeDistribution = $latestLocations->groupBy('office')
+            ->map(function($group) {
+                return $group->count();
+            })
+            ->filter(function($count, $office) {
+                return !empty($office);
+            });
+
+        // Data for Employee Type Distribution Chart (Non-Admins only)
+        $typeDistribution = $latestLocations->groupBy('employee_type')
+            ->map(function($group) {
+                return $group->count();
+            })
+            ->filter(function($count, $type) {
+                return !empty($type);
+            });
+
+        // Get recent location records for non-admins
+        $recentLocations = EmployeeLocation::whereHas('user', function($q) {
+                $q->where('is_admin', false);
+            })
+            ->with('user')
             ->latest('id')
             ->limit(100)
             ->get();
@@ -141,10 +171,39 @@ class AdminController extends Controller
             'totalEmployees', 
             'totalLocations', 
             'totalOffices', 
-            'employees',
+            'recentUpdatesCount',
             'latestLocations', 
             'recentLocations',
-            'offices'
+            'offices',
+            'officeDistribution',
+            'typeDistribution'
         ));
+    }
+
+    /**
+     * Update current admin profile.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return back()->with('success', 'Profile updated successfully.');
     }
 }

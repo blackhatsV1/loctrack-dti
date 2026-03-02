@@ -6,11 +6,12 @@
     .map-wrapper {
         display: flex;
         gap: 0;
-        height: calc(100vh - 120px);
-        border-radius: 1rem;
+        width: 100%;
+        height: 600px;
+        border-radius: 1.5rem;
         overflow: hidden;
         border: 1px solid var(--glass-border);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
     .filter-sidebar {
         width: 300px;
@@ -84,7 +85,7 @@
     .popup-value { color: #e2e8f0; word-break: break-word; }
     .popup-office-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
     @media (max-width: 768px) {
-        .map-wrapper { flex-direction: column; height: calc(100vh - 80px); }
+        .map-wrapper { flex-direction: column; }
         .filter-sidebar { width: 100%; min-width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid var(--glass-border); }
     }
 </style>
@@ -202,15 +203,26 @@
     // ─── Popup ───
     function buildPopup(loc) {
         const name = loc.user?.name || 'Unknown';
+        const isMasterAdmin = loc.user?.is_admin;
+        const isKmlAdmin = loc.user?.name === 'Admin' && !isMasterAdmin;
+        
         const idNo = loc.employee_id_no || 'N/A';
         const empType = loc.employee_type || '';
         const office = loc.office || 'Unassigned';
         const address = loc.address || '—';
         const mobile = loc.mobile_no || '—';
         const color = getCatColor(getCategory(loc));
+        
+        let labelHtml = '';
+        if (isKmlAdmin) {
+            labelHtml = '<span style="font-size: 0.7rem; background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(99, 102, 241, 0.3);">KML Entry</span>';
+        } else if (isMasterAdmin) {
+            labelHtml = '<span style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(16, 185, 129, 0.3);">Master Admin</span>';
+        }
+
         return `
             <div class="popup-card">
-                <div class="popup-name">${name}</div>
+                <div class="popup-name">${name}${labelHtml}</div>
                 <div class="popup-id">ID: ${idNo}${empType ? ' • ' + empType : ''}</div>
                 <hr class="popup-divider">
                 <div class="popup-row"><span class="popup-label">Type</span><span class="popup-value"><span class="popup-office-badge" style="background:${color}22;color:${color};border:1px solid ${color}44;">${empType}</span></span></div>
@@ -315,12 +327,22 @@
         }
 
         filtered.slice(0, 50).forEach(m => {
+            const isMasterAdmin = m.data.user?.is_admin;
+            const isKmlAdmin = m.data.user?.name === 'Admin' && !isMasterAdmin;
+            
+            let labelHtml = '';
+            if (isKmlAdmin) {
+                labelHtml = '<span style="font-size: 0.65rem; color: #818cf8; margin-left: 5px;">(KML Entry)</span>';
+            } else if (isMasterAdmin) {
+                labelHtml = '<span style="font-size: 0.65rem; color: #10b981; margin-left: 5px;">(Master Admin)</span>';
+            }
+
             const item = document.createElement('div');
             item.className = 'filter-item';
             item.style.padding = '0.5rem 1.25rem';
             item.innerHTML = `
                 <div style="flex: 1;">
-                    <div style="font-weight: 500; font-size: 0.85rem;">${m.data.user?.name}</div>
+                    <div style="font-weight: 500; font-size: 0.85rem;">${m.data.user?.name}${labelHtml}</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted);">${m.data.office || 'No Office'}</div>
                 </div>
             `;
