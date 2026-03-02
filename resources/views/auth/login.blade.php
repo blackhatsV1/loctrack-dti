@@ -18,8 +18,5 @@
 
         <button type="submit" style="width: 100%;">Login</button>
     </form>
-    <div style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
-        Don't have an account? <a href="{{ route('register') }}" style="color: var(--primary); text-decoration: none;">Register</a>
-    </div>
 </div>
 @endsection

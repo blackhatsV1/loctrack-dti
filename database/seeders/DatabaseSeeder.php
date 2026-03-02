@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,13 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create admin user
+        User::firstOrCreate(
+            ['email' => 'admin@dti6.gov.ph'],
+            [
+                'name' => 'DTI6 Admin',
+                'password' => Hash::make('admin123'),
+                'is_admin' => true,
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
+        // Import employees from Google My Maps KML
         $this->call(EmployeeLocationSeeder::class);
     }
 }

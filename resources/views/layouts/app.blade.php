@@ -57,16 +57,44 @@
             -webkit-text-fill-color: transparent;
         }
 
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
         .nav-links a {
             color: var(--text-light);
             text-decoration: none;
-            margin-left: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
             font-weight: 400;
-            transition: color 0.3s ease;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+        }
+
+        .nav-links a.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+
+        .nav-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: 0.5rem;
+            vertical-align: middle;
         }
 
         main {
@@ -74,12 +102,12 @@
             padding: 2rem;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
         }
 
         .glass-card {
@@ -111,6 +139,26 @@
             box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
         }
 
+        .alert-success {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            color: #4ade80;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-error {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #f43f5e;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -127,21 +175,32 @@
         <div class="logo">LocTrack Pro</div>
         <div class="nav-links">
             @auth
-                <a href="{{ route('dashboard') }}">Dashboard</a>
-                <a href="{{ route('admin.map') }}">Real-time Map</a>
-                <form method="POST" action="{{ route('logout') }}" style="display: inline; margin-left: 2rem;">
+                @if(auth()->user()->is_admin)
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
+                    <a href="{{ route('admin.employees') }}" class="{{ request()->routeIs('admin.employees*') ? 'active' : '' }}">Employees</a>
+                    <a href="{{ route('admin.map') }}" class="{{ request()->routeIs('admin.map') ? 'active' : '' }}">Map</a>
+                    <span class="nav-badge">Admin</span>
+                @else
+                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">My Tracker</a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">Logout</a>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" style="opacity: 0.7;">Logout</a>
                 </form>
             @else
                 <a href="{{ route('login') }}">Login</a>
-                <a href="{{ route('register') }}">Register</a>
             @endauth
         </div>
     </nav>
 
     <main>
         <div class="container">
+            @if(session('success'))
+                <div class="alert-success">{{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert-error">{{ session('error') }}</div>
+            @endif
             @yield('content')
         </div>
     </main>
