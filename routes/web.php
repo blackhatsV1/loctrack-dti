@@ -15,7 +15,9 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::post('/api/location', [LocationController::class, 'store'])->name('location.store');
+    Route::post('/api/location', [LocationController::class, 'store'])
+        ->middleware('throttle:30,1')
+        ->name('location.store');
 });
 
 // Admin routes (authenticated + admin)

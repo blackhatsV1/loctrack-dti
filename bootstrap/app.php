@@ -11,7 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        
+        $middleware->throttleApi('60,1'); // Generic API rate limit
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
