@@ -260,129 +260,128 @@
 @section('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle chart loading states
-        setTimeout(() => {
+        // Handle chart loading states with a safeguard
+        const hideLoading = () => {
             document.getElementById('office-chart-loading')?.classList.add('hidden');
             document.getElementById('type-chart-loading')?.classList.add('hidden');
             document.getElementById('table-loading')?.classList.add('hidden');
-        }, 800);
+        };
 
-    const latestLocations = @json($latestLocations);
-    const offices = @json($offices);
-    const officeData = @json($officeDistribution);
-    const typeData = @json($typeDistribution);
+        setTimeout(hideLoading, 1500); // Increased timeout for safety
 
-    // Common Chart Configuration
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    color: '#94a3b8',
-                    font: { family: 'Outfit', size: 12, weight: '500' },
-                    padding: 25,
-                    usePointStyle: true,
-                    pointStyle: 'circle'
-                }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                titleColor: '#f8fafc',
-                bodyColor: '#94a3b8',
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                borderWidth: 1,
-                padding: 12,
-                displayColors: true,
-                usePointStyle: true,
-                cornerRadius: 8,
-                titleFont: { family: 'Outfit', size: 14, weight: '600' },
-                bodyFont: { family: 'Outfit', size: 13 }
-            }
-        }
-    };
+        try {
+            const officeData = @json($officeDistribution);
+            const typeData = @json($typeDistribution);
 
-    // Office Distribution Chart
-    new Chart(document.getElementById('officeChart'), {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(officeData),
-            datasets: [{
-                data: Object.values(officeData),
-                backgroundColor: [
-                    '#6366f1', // Indigo
-                    '#10b981', // Emerald
-                    '#3b82f6', // Blue
-                    '#8b5cf6', // Violet
-                    '#f43f5e', // Rose
-                    '#f59e0b', // Amber
-                    '#06b6d4'  // Cyan
-                ],
-                borderWidth: 2,
-                borderColor: '#1e293b',
-                hoverOffset: 15,
-                hoverBorderWidth: 4
-            }]
-        },
-        options: {
-            ...chartOptions,
-            cutout: '75%',
-            spacing: 5
-        }
-    });
+            console.log('Office Distribution Data:', officeData);
+            console.log('Type Distribution Data:', typeData);
 
-    // Personnel Type Distribution Chart
-    const ctx = document.getElementById('typeChart').getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
-    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.1)');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(typeData),
-            datasets: [{
-                label: 'Personnel Count',
-                data: Object.values(typeData),
-                backgroundColor: gradient,
-                borderColor: '#818cf8',
-                borderWidth: 2,
-                borderRadius: 8,
-                borderSkipped: false,
-                barThickness: 40
-            }]
-        },
-        options: {
-            ...chartOptions,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { 
-                        color: 'rgba(255, 255, 255, 0.05)',
-                        drawBorder: false
+            // Common Chart Configuration
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            font: { family: 'Outfit', size: 12, weight: '500' },
+                            padding: 25,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
                     },
-                    ticks: { 
-                        color: '#94a3b8', 
-                        stepSize: 1,
-                        font: { family: 'Outfit' }
-                    }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { 
-                        color: '#94a3b8',
-                        font: { family: 'Outfit' }
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#f8fafc',
+                        bodyColor: '#94a3b8',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: true,
+                        usePointStyle: true,
+                        cornerRadius: 8,
+                        titleFont: { family: 'Outfit', size: 14, weight: '600' },
+                        bodyFont: { family: 'Outfit', size: 13 }
                     }
                 }
-            },
-            plugins: {
-                ...chartOptions.plugins,
-                legend: { display: false }
+            };
+
+            // Office Distribution Chart
+            if (Object.keys(officeData).length > 0) {
+                new Chart(document.getElementById('officeChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(officeData),
+                        datasets: [{
+                            data: Object.values(officeData),
+                            backgroundColor: [
+                                '#6366f1', '#10b981', '#3b82f6', '#8b5cf6', '#f43f5e', '#f59e0b', '#06b6d4'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#1e293b',
+                            hoverOffset: 15,
+                            hoverBorderWidth: 4
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        cutout: '75%',
+                        spacing: 5
+                    }
+                });
+            } else {
+                console.warn('No office distribution data available.');
             }
+
+            // Personnel Type Distribution Chart
+            if (Object.keys(typeData).length > 0) {
+                const ctx = document.getElementById('typeChart').getContext('2d');
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
+                gradient.addColorStop(1, 'rgba(99, 102, 241, 0.1)');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(typeData),
+                        datasets: [{
+                            label: 'Personnel Count',
+                            data: Object.values(typeData),
+                            backgroundColor: gradient,
+                            borderColor: '#818cf8',
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
+                            barThickness: 40
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+                                ticks: { color: '#94a3b8', stepSize: 1, font: { family: 'Outfit' } }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8', font: { family: 'Outfit' } }
+                            }
+                        },
+                        plugins: {
+                            ...chartOptions.plugins,
+                            legend: { display: false }
+                        }
+                    }
+                });
+            } else {
+                console.warn('No personnel type distribution data available.');
+            }
+        } catch (e) {
+            console.error('Chart initialization failed:', e);
+            hideLoading();
         }
-    });
 
     function toggleDashboardSection(sectionId) {
         const sections = ['locations', 'offices'];

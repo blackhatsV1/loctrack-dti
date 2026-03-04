@@ -114,6 +114,8 @@ class AdminController extends Controller
     public function dashboard()
     {
         $totalEmployees = User::where('is_admin', false)->count();
+        \Log::info("Dashboard: Total Employees count in DB: " . $totalEmployees);
+        
         $totalLocations = EmployeeLocation::whereHas('user', function($q) {
                 $q->where('is_admin', false);
             })

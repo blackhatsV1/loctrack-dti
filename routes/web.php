@@ -6,6 +6,11 @@ use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return auth()->user()->is_admin 
+            ? redirect()->route('admin.dashboard') 
+            : redirect()->route('dashboard');
+    }
     return view('welcome');
 });
 
