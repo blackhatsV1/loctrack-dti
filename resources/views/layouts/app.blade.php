@@ -344,6 +344,34 @@
                 padding: 1rem;
             }
         }
+
+        /* ===== Reusable Loading States ===== */
+        .page-loading {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 3rem;
+            width: 100%;
+        }
+        .page-loading.hidden {
+            display: none;
+        }
+        .page-loading .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: pageLoadSpin 0.8s linear infinite;
+        }
+        .page-loading .spinner-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        @keyframes pageLoadSpin {
+            to { transform: rotate(360deg); }
+        }
     </style>
     @yield('styles')
 </head>

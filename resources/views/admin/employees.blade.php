@@ -111,7 +111,10 @@
 
     <div class="emp-count">Showing {{ $employees->count() }} of {{ $employees->total() }} employees</div>
 
-    <div class="glass-card" style="padding: 0; overflow-x: auto;">
+    <div class="glass-card" style="padding: 0; overflow-x: auto; position: relative;">
+        <div class="page-loading" id="employees-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: rgba(15, 23, 42, 0.82);">
+            <div class="spinner"></div>
+        </div>
         <table class="emp-table">
             <thead>
                 <tr>
@@ -179,4 +182,13 @@
     </div>
     @endif
 </div>
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            document.getElementById('employees-loading')?.classList.add('hidden');
+        }, 600);
+    });
+</script>
+@endsection
 @endsection

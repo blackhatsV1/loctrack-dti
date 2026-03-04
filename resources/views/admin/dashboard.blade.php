@@ -154,12 +154,20 @@
         <div class="glass-card">
             <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-light);">Office Distribution</h3>
             <div class="chart-container">
+                <div class="page-loading" id="office-chart-loading">
+                    <div class="spinner"></div>
+                    <div class="spinner-text">Loading distribution...</div>
+                </div>
                 <canvas id="officeChart"></canvas>
             </div>
         </div>
         <div class="glass-card">
             <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-light);">Personnel Type Breakdown</h3>
             <div class="chart-container">
+                <div class="page-loading" id="type-chart-loading">
+                    <div class="spinner"></div>
+                    <div class="spinner-text">Loading breakdown...</div>
+                </div>
                 <canvas id="typeChart"></canvas>
             </div>
         </div>
@@ -172,7 +180,10 @@
                 📍 Location Records
             </h2>
             <input type="text" id="power-search" class="search-input" placeholder="Power Search: Find by name, address, or office..." onkeyup="powerSearch('location-table', 'power-search')">
-            <div class="table-container">
+            <div class="table-container" style="position: relative;">
+                <div class="page-loading" id="table-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: rgba(15, 23, 42, 0.8);">
+                    <div class="spinner"></div>
+                </div>
                 <table class="data-table" id="location-table">
                     <thead>
                         <tr>
@@ -246,10 +257,13 @@
 @section('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    let maps = {
-        employees: null,
-        offices: null
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle chart loading states
+        setTimeout(() => {
+            document.getElementById('office-chart-loading')?.classList.add('hidden');
+            document.getElementById('type-chart-loading')?.classList.add('hidden');
+            document.getElementById('table-loading')?.classList.add('hidden');
+        }, 800);
 
     const latestLocations = @json($latestLocations);
     const offices = @json($offices);

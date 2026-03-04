@@ -16,7 +16,24 @@
             <input type="password" name="password" required style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white;">
         </div>
 
-        <button type="submit" style="width: 100%;">Login</button>
+        <button type="submit" style="width: 100%; position: relative;" id="login-btn">
+            <span id="btn-text">Login</span>
+            <div id="btn-spinner" class="spinner" style="display: none; width: 20px; height: 20px; border-width: 2px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-top-color: white;"></div>
+        </button>
     </form>
 </div>
+
+@section('scripts')
+<script>
+    document.querySelector('form').addEventListener('submit', function() {
+        const btn = document.getElementById('login-btn');
+        const text = document.getElementById('btn-text');
+        const spinner = document.getElementById('btn-spinner');
+        
+        btn.disabled = true;
+        text.style.opacity = '0';
+        spinner.style.display = 'block';
+    });
+</script>
+@endsection
 @endsection

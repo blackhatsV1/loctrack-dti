@@ -85,6 +85,39 @@
     .popup-label { color: #64748b; min-width: 60px; flex-shrink: 0; }
     .popup-value { color: #e2e8f0; word-break: break-word; }
     .popup-office-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
+    /* Loading overlay */
+    .map-loading {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        gap: 1rem;
+        border-radius: 1.5rem;
+        transition: opacity 0.4s ease;
+    }
+    .map-loading.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .loading-spinner {
+        width: 40px; height: 40px;
+        border: 3px solid rgba(99, 102, 241, 0.2);
+        border-top-color: #6366f1;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .loading-text {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
     @media (max-width: 768px) {
         .map-wrapper {
             flex-direction: column;
@@ -94,31 +127,38 @@
         .filter-sidebar {
             width: 100%;
             min-width: 100%;
-            max-height: none;
+            max-height: 250px;
             border-right: none;
             border-bottom: 1px solid var(--glass-border);
+            overflow-y: auto;
+        }
+        .filter-sidebar.mobile-collapsed {
             display: none;
         }
-        .filter-sidebar.mobile-open {
-            display: flex;
-            max-height: 250px;
-        }
         #map {
-            min-height: 300px;
+            min-height: 300px !important;
+            height: auto !important;
+            flex: 1;
         }
         .sidebar-toggle {
-            display: block;
+            display: flex;
+        }
+        .map-loading {
+            border-radius: 1rem;
         }
     }
     .sidebar-toggle {
         display: none;
         width: 100%;
-        padding: 0.5rem;
+        padding: 0.6rem 1rem;
         font-size: 0.85rem;
         border-radius: 0;
         border-bottom: 1px solid var(--glass-border);
         background: var(--glass);
         color: var(--text-light);
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
     }
     .sidebar-toggle:hover {
         transform: none;
@@ -137,11 +177,15 @@
             </p>
         </div>
     </div>
-    <div class="map-wrapper">
-        <button class="sidebar-toggle" onclick="document.querySelector('.filter-sidebar').classList.toggle('mobile-open')">
-            🗂️ Toggle Filters
+    <div class="map-wrapper" style="position: relative;">
+        <div class="map-loading" id="map-loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading employee locations...</div>
+        </div>
+        <button class="sidebar-toggle" onclick="toggleMobileSidebar()">
+            🗂️ <span id="sidebar-toggle-text">Hide Filters</span>
         </button>
-        <div class="filter-sidebar">
+        <div class="filter-sidebar" id="filter-sidebar">
             <div class="filter-header">
                 <h3 style="display: flex; align-items: center; justify-content: space-between;">
                     🗂️ Layers
@@ -175,10 +219,19 @@
 @section('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+    // Mobile sidebar toggle
+    window.toggleMobileSidebar = function() {
+        const sidebar = document.getElementById('filter-sidebar');
+        const text = document.getElementById('sidebar-toggle-text');
+        sidebar.classList.toggle('mobile-collapsed');
+        text.textContent = sidebar.classList.contains('mobile-collapsed') ? 'Show Filters' : 'Hide Filters';
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof L === 'undefined') {
             console.error('Leaflet failed to load from CDN');
             document.getElementById('map').innerHTML = '<div style="color:white;padding:20px;">Error: Leaflet library failed to load. Please check your internet connection.</div>';
+            document.getElementById('map-loading')?.classList.add('hidden');
             return;
         }
         const map = L.map('map', { preferCanvas: true }).setView([10.69, 122.52], 8);
@@ -378,6 +431,12 @@
                 });
                 buildSidebar();
                 updateCount();
+                // Hide loading overlay
+                document.getElementById('map-loading')?.classList.add('hidden');
+            })
+            .catch(err => {
+                console.error('Failed to load locations:', err);
+                document.getElementById('map-loading')?.classList.add('hidden');
             });
     });
 </script>

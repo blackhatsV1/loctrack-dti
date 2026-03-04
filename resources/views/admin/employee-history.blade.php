@@ -55,7 +55,10 @@
     <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Location History</h1>
     <p style="color: var(--text-muted); margin-bottom: 2rem;">Tracking history for <strong>{{ $user->name }}</strong> — {{ $locations->total() }} records</p>
 
-    <div class="glass-card" style="padding: 0; overflow-x: auto;">
+    <div class="glass-card" style="padding: 0; overflow-x: auto; position: relative;">
+        <div class="page-loading" id="history-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: rgba(15, 23, 42, 0.82);">
+            <div class="spinner"></div>
+        </div>
         <table class="history-table">
             <thead>
                 <tr>
@@ -110,4 +113,13 @@
     </div>
     @endif
 </div>
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            document.getElementById('history-loading')?.classList.add('hidden');
+        }, 500);
+    });
+</script>
+@endsection
 @endsection
