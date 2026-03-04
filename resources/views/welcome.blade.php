@@ -5,16 +5,16 @@
     <div style="margin-bottom: 2rem;">
         <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" style="height: 100px; width: auto;">
     </div>
-    <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 600; line-height: 1.1;">
+    <h1 class="hero-title" style="font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 600; line-height: 1.1;">
         Track Your Team in <br>
         <span style="background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Real-Time</span>
     </h1>
-    <p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 3rem;">
+    <p class="hero-subtitle" style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 3rem;">
         The most elegant and reliable way to coordinate your workforce. <br>
         Glassmorphic interface, Leaflet maps, and seamless tracking.
     </p>
 
-    <div style="display: flex; gap: 1.5rem; justify-content: center;">
+    <div class="hero-buttons" style="display: flex; gap: 1.5rem; justify-content: center;">
         <a href="{{ route('login') }}" class="btn" style="padding: 1rem 2.5rem;">Sign In</a>
     </div>
 
@@ -27,5 +27,20 @@
 
 <style>
     .text-center { text-align: center; }
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem !important;
+        }
+        .hero-subtitle {
+            font-size: 1rem !important;
+        }
+        .hero-subtitle br {
+            display: none;
+        }
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
 </style>
 @endsection

@@ -77,6 +77,45 @@
         outline: none;
         border-color: var(--primary);
     }
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+        .stat-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .analytics-grid {
+            grid-template-columns: 1fr;
+        }
+        .chart-container {
+            height: 220px;
+        }
+        .stat-card {
+            padding: 1rem !important;
+        }
+        .stat-card > div:first-child {
+            font-size: 2rem !important;
+        }
+        .data-table {
+            min-width: 600px;
+        }
+    }
+    @media (max-width: 480px) {
+        .stat-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+    }
 </style>
 @endsection
 
@@ -85,7 +124,7 @@
     <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Admin Dashboard</h1>
     <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Real-time workforce distribution and analytics.</p>
 
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="stat-grid">
         <div class="glass-card stat-card" id="card-employees" onclick="window.location.href='{{ route('admin.employees') }}'">
             <div style="font-size: 2.5rem; font-weight: 600; color: #818cf8;">
                 {{ $totalEmployees }}
@@ -111,7 +150,7 @@
     </div>
 
     <!-- Analytics Section -->
-    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="analytics-grid">
         <div class="glass-card">
             <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-light);">Office Distribution</h3>
             <div class="chart-container">

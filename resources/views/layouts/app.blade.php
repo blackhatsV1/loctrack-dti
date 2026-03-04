@@ -6,6 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>DTI | Employee Locator</title>
     <link rel="icon" type="image/png" href="{{ asset('dti-logo.png') }}">
+    <!-- PWA -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -47,6 +53,24 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            flex-wrap: wrap;
+        }
+
+        .nav-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+            box-shadow: none;
+        }
+        .nav-hamburger:hover {
+            background: rgba(99, 102, 241, 0.15);
+            transform: none;
+            box-shadow: none;
         }
 
         .logo-container {
@@ -74,6 +98,10 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
+        }
+
+        .nav-links.mobile-open {
+            display: flex;
         }
 
         .nav-links a {
@@ -253,6 +281,69 @@
         .animate-fade-in {
             animation: fadeIn 0.6s ease-out forwards;
         }
+
+        /* ===== Mobile Responsive ===== */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.25rem;
+            }
+            .nav-hamburger {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+                border-top: 1px solid var(--glass-border);
+            }
+            .nav-links.mobile-open {
+                display: flex;
+            }
+            .nav-links a {
+                padding: 0.75rem 0.5rem;
+                border-radius: 0.5rem;
+            }
+            .nav-links form {
+                width: 100%;
+            }
+            .nav-links form a {
+                display: block;
+                padding: 0.75rem 0.5rem;
+            }
+            .nav-badge {
+                align-self: flex-start;
+                margin-left: 0;
+                margin-top: 0.25rem;
+            }
+            main {
+                padding: 1rem;
+            }
+            .glass-card {
+                padding: 1.25rem;
+                border-radius: 1rem;
+            }
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 0.75rem;
+            }
+            .glass-card {
+                padding: 1rem;
+            }
+        }
     </style>
     @yield('styles')
 </head>
@@ -262,7 +353,8 @@
             <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" class="logo-img" width="40" height="40" decoding="async">
             <span class="logo-text">LocTrack Pro</span>
         </a>
-        <div class="nav-links">
+        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('mobile-open')" aria-label="Toggle navigation">☰</button>
+        <div class="nav-links" id="nav-links">
             @auth
                 @if(auth()->user()->is_admin)
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
@@ -338,6 +430,15 @@
             if (modal) {
                 modal.classList.toggle('active');
             }
+        }
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
         }
     </script>
     @yield('scripts')

@@ -38,6 +38,11 @@
     .pagination-links a:hover { background: rgba(99,102,241,0.15); color: white; }
     .pagination-links .active { background: var(--primary); color: white; border-color: var(--primary); }
     .coord-mono { font-family: monospace; font-size: 0.85rem; color: var(--text-muted); }
+    @media (max-width: 768px) {
+        .history-table {
+            min-width: 650px;
+        }
+    }
 </style>
 @endsection
 

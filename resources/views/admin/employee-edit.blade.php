@@ -46,6 +46,14 @@
         box-shadow: none;
         transform: none;
     }
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        .form-actions {
+            flex-direction: column;
+        }
+    }
 </style>
 @endsection
 

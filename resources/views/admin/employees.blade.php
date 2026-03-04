@@ -73,6 +73,20 @@
     .pagination-links a:hover { background: rgba(99,102,241,0.15); color: white; }
     .pagination-links .active { background: var(--primary); color: white; border-color: var(--primary); }
     .emp-count { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+    @media (max-width: 768px) {
+        .search-bar {
+            flex-direction: column;
+        }
+        .search-bar input {
+            min-width: 100%;
+        }
+        .search-bar select {
+            min-width: 100%;
+        }
+        .emp-table {
+            min-width: 600px;
+        }
+    }
 </style>
 @endsection
 

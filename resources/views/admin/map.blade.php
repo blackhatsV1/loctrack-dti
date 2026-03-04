@@ -86,8 +86,43 @@
     .popup-value { color: #e2e8f0; word-break: break-word; }
     .popup-office-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
     @media (max-width: 768px) {
-        .map-wrapper { flex-direction: column; }
-        .filter-sidebar { width: 100%; min-width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid var(--glass-border); }
+        .map-wrapper {
+            flex-direction: column;
+            height: calc(100vh - 140px);
+            border-radius: 1rem;
+        }
+        .filter-sidebar {
+            width: 100%;
+            min-width: 100%;
+            max-height: none;
+            border-right: none;
+            border-bottom: 1px solid var(--glass-border);
+            display: none;
+        }
+        .filter-sidebar.mobile-open {
+            display: flex;
+            max-height: 250px;
+        }
+        #map {
+            min-height: 300px;
+        }
+        .sidebar-toggle {
+            display: block;
+        }
+    }
+    .sidebar-toggle {
+        display: none;
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+        border-radius: 0;
+        border-bottom: 1px solid var(--glass-border);
+        background: var(--glass);
+        color: var(--text-light);
+    }
+    .sidebar-toggle:hover {
+        transform: none;
+        box-shadow: none;
     }
 </style>
 @endsection
@@ -103,6 +138,9 @@
         </div>
     </div>
     <div class="map-wrapper">
+        <button class="sidebar-toggle" onclick="document.querySelector('.filter-sidebar').classList.toggle('mobile-open')">
+            🗂️ Toggle Filters
+        </button>
         <div class="filter-sidebar">
             <div class="filter-header">
                 <h3 style="display: flex; align-items: center; justify-content: space-between;">
