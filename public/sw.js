@@ -39,21 +39,11 @@ self.addEventListener('fetch', (event) => {
     // Skip non-GET requests
     if (request.method !== 'GET') return;
 
-    // Navigation requests: network-first with offline fallback
+    // Navigation requests: Always go to network
     if (request.mode === 'navigate') {
         event.respondWith(
             fetch(request)
-                .then((response) => {
-                    // Cache successful page loads
-                    const clone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-                    return response;
-                })
-                .catch(() => {
-                    return caches.match(request).then((cached) => {
-                        return cached || caches.match(OFFLINE_URL);
-                    });
-                })
+                .catch(() => caches.match(OFFLINE_URL))
         );
         return;
     }
