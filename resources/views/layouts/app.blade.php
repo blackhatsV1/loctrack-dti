@@ -259,7 +259,7 @@
 <body>
     <nav>
         <a href="{{ url('/') }}" class="logo-container">
-            <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" class="logo-img">
+            <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" class="logo-img" width="40" height="40" decoding="async">
             <span class="logo-text">LocTrack Pro</span>
         </a>
         <div class="nav-links">

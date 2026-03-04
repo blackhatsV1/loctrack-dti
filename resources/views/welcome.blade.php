@@ -20,7 +20,7 @@
 
     <div style="margin-top: 6rem; position: relative;">
         <div style="background: var(--glass); padding: 1rem; border-radius: 2rem; border: 1px solid var(--glass-border); opacity: 0.5;">
-            <img src="{{ asset('images/world_map_preview.png') }}" alt="Map Preview" style="width: 100%; height: 300px; object-fit: cover; border-radius: 1.5rem; display: block;">
+            <img src="{{ asset('images/world_map_preview.png') }}" alt="Map Preview" style="width: 100%; height: 300px; object-fit: cover; border-radius: 1.5rem; display: block;" loading="lazy" decoding="async">
         </div>
     </div>
 </div>

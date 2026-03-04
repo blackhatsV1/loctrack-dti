@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
-@vite(['resources/js/map-bundle.js'])
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <style>
     .map-wrapper {
         display: flex;
@@ -13,16 +13,6 @@
         border: 1px solid var(--glass-border);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
-    /* ... existing styles ... */
-    #map { flex: 1; background: #111; }
-    /* Marker Cluster Styling Overrides */
-    .marker-cluster-small { background-color: rgba(99, 102, 241, 0.6); }
-    .marker-cluster-small div { background-color: rgba(99, 102, 241, 0.6); color: white; }
-    .marker-cluster-medium { background-color: rgba(129, 140, 248, 0.6); }
-    .marker-cluster-medium div { background-color: rgba(129, 140, 248, 0.6); color: white; }
-    .marker-cluster-large { background-color: rgba(165, 180, 252, 0.6); }
-    .marker-cluster-large div { background-color: rgba(165, 180, 252, 0.6); color: white; }
-    
     .filter-sidebar {
         width: 300px;
         min-width: 300px;
@@ -78,6 +68,7 @@
     .filter-actions button { flex: 1; padding: 0.45rem 0.5rem; font-size: 0.8rem; border-radius: 0.4rem; }
     .btn-ghost { background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted); }
     .btn-ghost:hover { background: rgba(255,255,255,0.06); transform: none; box-shadow: none; }
+    #map { flex: 1; background: #111; }
     
     .leaflet-popup-content-wrapper {
         background: var(--bg-dark); color: var(--text-light);
@@ -102,7 +93,6 @@
 @endsection
 
 @section('content')
-<!-- ... same HTML ... -->
 <div class="animate-fade-in">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem;">
         <div>
@@ -145,6 +135,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const map = L.map('map', { preferCanvas: true }).setView([10.69, 122.52], 8);
@@ -154,15 +145,6 @@
             subdomains: 'abcd',
             maxZoom: 20
         }).addTo(map);
-
-        // Marker Cluster Group
-        const clusters = L.markerClusterGroup({
-            showCoverageOnHover: false,
-            spiderfyOnMaxZoom: true,
-            chunkedLoading: true,
-            maxClusterRadius: 50
-        });
-        map.addLayer(clusters);
 
         const categories = [
             { key: 'NC Negros Occidental',  label: 'NC Negros Occidental', color: '#3b82f6' },
@@ -238,7 +220,7 @@
         let catFilters = {};
 
         function updateCount() {
-            document.getElementById('visible-count').textContent = allMarkers.filter(m => clusters.hasLayer(m.marker)).length;
+            document.getElementById('visible-count').textContent = allMarkers.filter(m => map.hasLayer(m.marker)).length;
         }
 
         function buildSidebar() {
@@ -261,12 +243,14 @@
         }
 
         function applyFilters() {
-            clusters.clearLayers();
-            const toAdd = [];
             allMarkers.forEach(m => {
-                if (catFilters[m.catKey]) toAdd.push(m.marker);
+                const visible = catFilters[m.catKey];
+                if (visible && !map.hasLayer(m.marker)) {
+                    m.marker.addTo(map);
+                } else if (!visible && map.hasLayer(m.marker)) {
+                    map.removeLayer(m.marker);
+                }
             });
-            clusters.addLayers(toAdd);
             updateCount();
         }
 
@@ -325,7 +309,7 @@
                 `;
                 item.onclick = () => {
                     map.setView(m.marker.getLatLng(), 15);
-                    if (!clusters.hasLayer(m.marker)) {
+                    if (!map.hasLayer(m.marker)) {
                         catFilters[m.catKey] = true;
                         document.querySelector(`.filter-item input[data-key="${m.catKey}"]`).checked = true;
                         applyFilters();
@@ -342,15 +326,13 @@
             .then(r => r.json())
             .then(data => {
                 document.getElementById('total-count').textContent = data.length;
-                const markersToAdd = [];
                 data.forEach(loc => {
                     const catKey = getCategory(loc);
                     const marker = L.marker([parseFloat(loc.latitude), parseFloat(loc.longitude)], { icon: getIcon(catKey) });
                     marker.bindPopup(buildPopup(loc), { maxWidth: 300 });
+                    marker.addTo(map);
                     allMarkers.push({ marker, catKey, data: loc });
-                    markersToAdd.push(marker);
                 });
-                clusters.addLayers(markersToAdd);
                 buildSidebar();
                 updateCount();
             });
