@@ -1,0 +1,138 @@
+Unique Offices in Excel: 137
+ - Aklan Provincial Office
+ - Aklan: Altavas
+ - Aklan: Balete
+ - Aklan: Banga
+ - Aklan: Batan
+ - Aklan: Buruanga
+ - Aklan: Caticlan (Satellite office)
+ - Aklan: Ibajay
+ - Aklan: Kalibo
+ - Aklan: Lezo
+ - Aklan: Libacao
+ - Aklan: Madalag
+ - Aklan: Makato
+ - Aklan: Malay
+ - Aklan: Malinao
+ - Aklan: Nabas
+ - Aklan: New Washington
+ - Aklan: Tangalan
+ - Antique Provincial Office
+ - Antique: Anini-y
+ - Antique: Barbaza
+ - Antique: Belison
+ - Antique: Bugasong
+ - Antique: Caluya
+ - Antique: Culasi
+ - Antique: Hamtic
+ - Antique: Laua an
+ - Antique: Libertad
+ - Antique: Patnongon
+ - Antique: San Jose
+ - Antique: San Remegio
+ - Antique: Sebaste
+ - Antique: Sibalom
+ - Antique: Tibiao
+ - Antique: Tobias Fornier
+ - Antique: Valderrama
+ - Capis: Sapian
+ - Capiz Provincial Office
+ - Capiz: Cuartero
+ - Capiz: Dao
+ - Capiz: Dumalag
+ - Capiz: Dumarao
+ - Capiz: Ivisan
+ - Capiz: Jamindan
+ - Capiz: Maayon
+ - Capiz: Mambusao
+ - Capiz: Panit-an
+ - Capiz: Pilar
+ - Capiz: Pontevedra
+ - Capiz: Roxas City
+ - Capiz: Sigma
+ - Capiz: Tapaz
+ - Guimaras Provincial Office
+ - Guimaras: Buenavista
+ - Guimaras: Jordan (DTI)
+ - Guimaras: Jordan (LGU)
+ - Guimaras: Nueva Valencia
+ - Guimaras: San Lorenzo
+ - Guimaras: Sibunag
+ - ILOILO: Alimodian
+ - ILOILO: Badiangan
+ - ILOILO: Bingawan
+ - ILOILO: Carles
+ - ILOILO: Dueñas
+ - ILOILO: Dumangas
+ - ILOILO: Igbaras
+ - ILOILO: Iloilo City (City Hall BRC)
+ - ILOILO: Janiuay
+ - ILOILO: Maasin
+ - ILOILO: Mina
+ - ILOILO: New Lucena
+ - ILOILO: San Dionisio
+ - Iloilo Provincial Office
+ - Iloilo: Ajuy
+ - Iloilo: Balasan
+ - Iloilo: Banate
+ - Iloilo: Barotac Nuevo
+ - Iloilo: Barotac Viejo
+ - Iloilo: Batad
+ - Iloilo: Cabatuan
+ - Iloilo: Calinog
+ - Iloilo: City of Passi
+ - Iloilo: Concepcion
+ - Iloilo: Dingle
+ - Iloilo: Estancia
+ - Iloilo: Guimbal
+ - Iloilo: Iloilo City (DTI)
+ - Iloilo: Iloilo City (Provincial Capitol)
+ - Iloilo: Lambunao
+ - Iloilo: Leganes
+ - Iloilo: Leon
+ - Iloilo: Miagao
+ - Iloilo: Oton
+ - Iloilo: Pavia
+ - Iloilo: Pototan
+ - Iloilo: San Enrique
+ - Iloilo: San Joaquin
+ - Iloilo: San Miguel
+ - Iloilo: San Rafael
+ - Iloilo: Santa Barbara
+ - Iloilo: Sara
+ - Iloilo: Tigbauan
+ - Iloilo: Tubungan
+ - Iloilo: Zarraga
+ - Ipophl
+ - Jo/cos
+ - Jo/cos - Iloilo
+ - NEGROS OCCIDENTAL: Calatrava
+ - NEGROS OCCIDENTAL: Candoni
+ - NEGROS OCCIDENTAL: Don Salvador Benedicto
+ - NEGROS OCCIDENTAL: Manapla
+ - NEGROS OCCIDENTAL: Murcia
+ - NEGROS OCCIDENTAL: Pulupandan
+ - NEGROS OCCIDENTAL: Toboso
+ - NEGROS OCCIDENTAL: Valladolid
+ - Negosyo Center
+ - Negros Occidental Provincial Office
+ - Negros Occidental: Bacolod City (DTI)
+ - Negros Occidental: Bacolod City (Provincial Capitol)
+ - Negros Occidental: Bago City
+ - Negros Occidental: Binalbagan
+ - Negros Occidental: Cadiz City
+ - Negros Occidental: Cauayan
+ - Negros Occidental: City of Kabankalan
+ - Negros Occidental: City of Sipalay
+ - Negros Occidental: City of Victorias
+ - Negros Occidental: Escalante City
+ - Negros Occidental: Himamaylan
+ - Negros Occidental: Hinobaan
+ - Negros Occidental: Isabela
+ - Negros Occidental: La Carlota City
+ - Negros Occidental: Pontevedra
+ - Negros Occidental: San Carlos City
+ - Negros Occidental: San Enrique
+ - Negros Occidental: Silay City
+ - Negros Occidental: Talisay City
+ - Regional Office

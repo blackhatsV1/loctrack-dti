@@ -23,6 +23,9 @@
     .dashboard-section.active {
         display: block;
     }
+    .hidden {
+        display: none !important;
+    }
     .chart-container {
         position: relative;
         height: 300px;
