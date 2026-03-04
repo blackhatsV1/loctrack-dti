@@ -28,6 +28,12 @@ class EmployeeLocationSeeder extends Seeder
             return;
         }
 
+        // Clear existing data before re-seeding (preserve admin users)
+        $this->command->info('Clearing existing employee data...');
+        EmployeeLocation::query()->delete();
+        User::where('is_admin', false)->delete();
+        $this->command->info('Existing data cleared.');
+
         $this->parseAndSeedKml($kmlContent);
     }
 
