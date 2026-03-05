@@ -1,0 +1,30 @@
+Total local: 259
+Total prod: 258
+
+--- Missing in Production ---
+
+--- Duplicates in Local (Clean Name) ---
+catherineplayes:
+  - Catherine P. Layes (catherine.p.layes.cos.il.006@dti6.gov.ph)
+  - Catherine P. Layes (catherine.p.layes@dti6.gov.ph)
+edengraceaperez:
+  - Eden Grace A. Perez (eden.grace.a.perez.cos.il.008@dti6.gov.ph)
+  - Eden Grace A. Perez (eden.grace.a.perez@dti6.gov.ph)
+juancarlosvcorros:
+  - Juan Carlos V. Corros (juan.carlos.v.corros.6.043@dti6.gov.ph)
+  - Juan Carlos V. Corros (juan.carlos.v.corros@dti6.gov.ph)
+judyannpbandiolarendon:
+  - Judy Ann P. Bandiola-Rendon (judy.ann.p.bandiola.rendon.2@dti6.gov.ph)
+  - Judy Ann P. Bandiola-Rendon (judy.ann.p.bandiola.rendon@dti6.gov.ph)
+maryannalteros:
+  - Mary Ann -. Alteros (mary.ann.alteros.cos.il.030@dti6.gov.ph)
+  - Mary Ann Alteros (mary.ann.alteros@dti6.gov.ph)
+normelegalvan:
+  - Normel E. Galvan (normel.e.galvan.6.076@dti6.gov.ph)
+  - Normel E. Galvan (normel.e.galvan@dti6.gov.ph)
+sherlynycanales:
+  - Sherlyn Y. Canales (sherlyn.y.canales.cos.il.001@dti6.gov.ph)
+  - Sherlyn Y. Canales (sherlyn.y.canales@dti6.gov.ph)
+wilmansemillano:
+  - Wilma N. Semillano (wilma.n.semillano.cos.il.007@dti6.gov.ph)
+  - Wilma N. Semillano (wilma.n.semillano@dti6.gov.ph)

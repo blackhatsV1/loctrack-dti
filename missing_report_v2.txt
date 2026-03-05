@@ -1,0 +1,10 @@
+Total local: 259
+Total prod: 258
+
+--- Count Discrepancies ---
+judyannpbandiolarendon: Local=2, Prod=1
+  Local records:
+    - Judy Ann P. Bandiola-Rendon (judy.ann.p.bandiola.rendon.2@dti6.gov.ph)
+    - Judy Ann P. Bandiola-Rendon (judy.ann.p.bandiola.rendon@dti6.gov.ph)
+  Prod records:
+    - Judy Ann P. Bandiola-Rendon (judy.ann.p.bandiola.rendon@dti6.gov.ph)

@@ -1,0 +1,6 @@
+81:-- Employee 17: Judy Ann P. Bandiola - Rendon N/a.
+82:INSERT INTO `users` (`name`, `email`, `password`, `is_admin`, `created_at`, `updated_at`) VALUES ('Judy Ann P. Bandiola - Rendon N/a.', 'judy.ann.p.bandiola.rendon.na.6.019@dti6.gov.ph', '$2y$12$LQv3c1yqBo9SkvXS7QTJde3TlKX.eBqz6Uxm6G5dE6anSHFcA.Gji', 0, '2026-03-04 14:41:47', '2026-03-04 14:41:47');
+481:-- Employee 117: Judy Ann P. Bandiola-Rendon
+482:INSERT INTO `users` (`name`, `email`, `password`, `is_admin`, `created_at`, `updated_at`) VALUES ('Judy Ann P. Bandiola-Rendon', 'judy.ann.p.bandiola.rendon@dti6.gov.ph', '$2y$12$LQv3c1yqBo9SkvXS7QTJde3TlKX.eBqz6Uxm6G5dE6anSHFcA.Gji', 0, '2026-03-04 14:41:47', '2026-03-04 14:41:47');
+485:-- Employee 118: Judy Ann P. Bandiola-Rendon
+486:INSERT INTO `users` (`name`, `email`, `password`, `is_admin`, `created_at`, `updated_at`) VALUES ('Judy Ann P. Bandiola-Rendon', 'judy.ann.p.bandiola.rendon.2@dti6.gov.ph', '$2y$12$LQv3c1yqBo9SkvXS7QTJde3TlKX.eBqz6Uxm6G5dE6anSHFcA.Gji', 0, '2026-03-04 14:41:47', '2026-03-04 14:41:47');

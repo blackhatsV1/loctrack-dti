@@ -1,0 +1,12 @@
+--- Production Audit Report ---
+Total Non-Admin Users: 258
+Users with is_admin = 0: 258
+Admin Users found: 1
+  - DTI6 Admin (admin@dti6.gov.ph)
+Listing all 258 Non-Admin Users:
+Detailed user list saved to production_users_list.txt
+
+--- Active Processes ---
+ID: 5 | User: event_scheduler | Host: localhost | DB:  | Command: Daemon | Time: 963 | State: Waiting on empty queue | Info: 
+ID: 258 | User: avnadmin | Host: 103.125.158.73:53784 | DB: defaultdb | Command: Execute | Time: 0 | State: init | Info: SHOW PROCESSLIST
+ID: 259 | User: avnadmin | Host: 122.53.77.211:53792 | DB: defaultdb | Command: Sleep | Time: 0 | State:  | Info: 

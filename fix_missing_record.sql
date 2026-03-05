@@ -1,0 +1,3 @@
+-- Targeted fix for missing 259th record
+INSERT INTO `users` (`name`, `email`, `password`, `is_admin`, `created_at`, `updated_at`) VALUES ('Judy Ann P. Bandiola-Rendon', 'judy.ann.p.bandiola.rendon.2@dti6.gov.ph', '$2y$12$LQv3c1yqBo9SkvXS7QTJde3TlKX.eBqz6Uxm6G5dE6anSHFcA.Gji', 0, NOW(), NOW());
+INSERT INTO `employee_locations` (`user_id`, `employee_id_no`, `address`, `latitude`, `longitude`, `mobile_no`, `office`, `employee_type`, `recorded_at`, `created_at`, `updated_at`) VALUES (LAST_INSERT_ID(), NULL, 'Sitio Alimbo Iraya, Buenavista, Nabas, Aklan', 11.8186268, 122.0912378, '(036) 268-3485', 'Aklan: Kalibo', 'NC Aklan', NOW(), NOW(), NOW());
