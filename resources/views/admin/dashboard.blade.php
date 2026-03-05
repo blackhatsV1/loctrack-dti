@@ -6,6 +6,10 @@
     .stat-card {
         cursor: pointer;
         transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: inherit;
     }
     .stat-card:hover {
         transform: translateY(-5px);
@@ -127,12 +131,12 @@
     <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Real-time workforce distribution and analytics.</p>
 
     <div class="stat-grid">
-        <div class="glass-card stat-card" id="card-employees" onclick="window.location.href='{{ route('admin.employees') }}'">
+        <a href="{{ route('admin.employees') }}" class="glass-card stat-card" id="card-employees">
             <div style="font-size: 2.5rem; font-weight: 600; color: #818cf8;">
                 {{ $totalEmployees }}
             </div>
             <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Total Personnel</div>
-        </div>
+        </a>
         <div class="glass-card stat-card" id="card-updates" onclick="toggleDashboardSection('locations')">
             <div style="font-size: 2.5rem; font-weight: 600; color: #34d399;">
                 {{ $totalLocations }}
@@ -145,10 +149,10 @@
             </div>
             <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Active Offices</div>
         </div>
-        <div class="glass-card stat-card" id="card-map" onclick="window.location.href='{{ route('admin.map') }}'">
+        <a href="{{ route('admin.map') }}" class="glass-card stat-card" id="card-map">
             <div style="font-size: 2.5rem; font-weight: 600;">🌍</div>
             <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Global View</div>
-        </div>
+        </a>
     </div>
 
     <!-- Analytics Section -->
