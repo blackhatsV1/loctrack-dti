@@ -18,7 +18,7 @@
 
         <button type="submit" style="width: 100%; position: relative;" id="login-btn">
             <span id="btn-text">Login</span>
-            <div id="btn-spinner" class="spinner" style="display: none; width: 20px; height: 20px; border-width: 2px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-top-color: white;"></div>
+            <div id="btn-spinner" class="spinner" style="display: none; width: 20px; height: 20px; border-width: 2px; position: absolute; left: 50%; top: 50%; margin: -10px 0 0 -10px; border-top-color: white;"></div>
         </button>
     </form>
 </div>
@@ -31,7 +31,7 @@
         const spinner = document.getElementById('btn-spinner');
         
         btn.disabled = true;
-        text.style.opacity = '0';
+        text.style.visibility = 'hidden';
         spinner.style.display = 'block';
     });
 </script>

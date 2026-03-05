@@ -356,26 +356,45 @@
             width: 100%;
         }
         .page-loading.hidden {
-            display: none;
+            display: none !important;
         }
-        .page-loading .spinner {
+        .spinner {
             width: 36px; height: 36px;
             border: 3px solid rgba(99, 102, 241, 0.2);
             border-top-color: #6366f1;
             border-radius: 50%;
-            animation: pageLoadSpin 0.8s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
-        .page-loading .spinner-text {
+        .spinner-text {
             color: var(--text-muted);
             font-size: 0.9rem;
         }
-        @keyframes pageLoadSpin {
+
+        /* Global redirect loading overlay */
+        #global-loader {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @keyframes spin {
             to { transform: rotate(360deg); }
         }
     </style>
     @yield('styles')
 </head>
 <body>
+    <div id="global-loader">
+        <div class="spinner" style="width: 48px; height: 48px; border-width: 4px;"></div>
+        <div class="spinner-text" style="color: white; font-weight: 500;">Redirecting...</div>
+    </div>
     <nav>
         <a href="{{ url('/') }}" class="logo-container">
             <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" class="logo-img" width="40" height="40" decoding="async">
@@ -468,6 +487,25 @@
                     .catch(err => console.log('SW registration failed:', err));
             });
         }
+
+        // Global loading feedback for links and forms
+        document.addEventListener('submit', function(e) {
+            const loader = document.getElementById('global-loader');
+            if (loader) loader.style.display = 'flex';
+        });
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('#') && !href.startsWith('javascript') && !this.hasAttribute('onclick') && this.target !== '_blank') {
+                    // Only show for main navigation links/buttons that might be slow
+                    if (this.classList.contains('btn') || this.parentElement.classList.contains('nav-links') || this.classList.contains('stat-card')) {
+                        const loader = document.getElementById('global-loader');
+                        if (loader) loader.style.display = 'flex';
+                    }
+                }
+            });
+        });
     </script>
     @yield('scripts')
 </body>

@@ -254,14 +254,14 @@
 @section('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-        // Handle chart loading states with a safeguard
         const hideLoading = () => {
             document.getElementById('office-chart-loading')?.classList.add('hidden');
             document.getElementById('type-chart-loading')?.classList.add('hidden');
             document.getElementById('table-loading')?.classList.add('hidden');
         };
 
-        setTimeout(hideLoading, 1500); // Increased timeout for safety
+        // Standard timeout fallback
+        const safetyTimeout = setTimeout(hideLoading, 5000); 
 
         try {
             const officeData = @json($officeDistribution);
@@ -372,6 +372,10 @@
             } else {
                 console.warn('No personnel type distribution data available.');
             }
+            
+            // Hide loading states immediately after successful initialization
+            clearTimeout(safetyTimeout);
+            hideLoading();
         } catch (e) {
             console.error('Chart initialization failed:', e);
             hideLoading();
