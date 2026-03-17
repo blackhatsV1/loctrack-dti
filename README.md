@@ -1,59 +1,130 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Western Visayas Industry Profile - Investment Funnel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A premium, data-driven web application showcasing the investment potential and economic profile of Western Visayas (Region VI), Philippines. Built with Laravel, Tailwind CSS, and Alpine.js.
 
-## About Laravel
+## 📚 Documentation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Explore the project's documentation to understand the architecture, features, and deployment procedures. Click on any file below to view its contents:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- 📖 [1. Project Overview](1_Project_Overview.md)
+- ⚙️ [2. Process Workflow](2_Process_Workflow.md)
+- 📋 [3. Functional Requirements](3_Functional_Requirements.md)
+- 🏗️ [4. System Architecture](4_System_Architecture.md)
+- 🗄️ [5. Database Documentation](5_Database_Documentation.md)
+- 🚀 [6. Deployment Guide](6_Deployment_Guide.md)
+- 📘 [7. User Manual](7_User_Manual.md)
+- 🛡️ [8. VAPT Report](8_VAPT_Report.md)
+- 📊 [9. Presentation Deck](9_Presentation.md)
+- 🗺️ [10. Master Project Plan / Roadmap](10_Project_Plan.md)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Getting Started
 
-## Learning Laravel
+You can set up this project using either **Docker (Recommended)** or a **Manual Local Setup**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Option 1: Docker Setup (Fastest)
 
-## Laravel Sponsors
+This project uses [Laravel Sail](https://laravel.com/docs/sail), a light-weight command-line interface for interacting with the project's Docker configuration.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running.
 
-### Premium Partners
+#### Setup Steps
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/blackhatsV1/western-visayas-region-6-investment-economic-profile
+   cd western-visayas-region-6-investment-economic-profile
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Install dependencies**:
+   ```bash
+   docker run --rm \
+       -u "$(id -u):$(id -g)" \
+       -v "$(pwd):/var/www/html" \
+       -w /var/www/html \
+       laravelsail/php82-composer:latest \
+       composer install --ignore-platform-reqs
+   ```
 
-## Contributing
+3. **Configure Environment**:
+   ```bash
+   cp .env.example .env
+   ```
+   *Note: Sail automatically configures the database connection for you.*
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Start the containers**:
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
 
-## Code of Conduct
+5. **Initialize Application**:
+   ```bash
+   ./vendor/bin/sail artisan key:generate
+   ./vendor/bin/sail artisan migrate --seed
+   ./vendor/bin/sail npm install
+   ./vendor/bin/sail npm run build
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The app will be available at [http://localhost](http://localhost).
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Option 2: Manual Local Setup
 
-## License
+Use this if you prefer running PHP and MySQL directly on your host machine.
 
+#### Prerequisites
+- **PHP 8.2+**
+- **Composer**
+- **Node.js & NPM**
+- **MySQL 8.0+**
+
+#### Setup Steps
+1. **Clone and Install**:
+   ```bash
+   git clone https://github.com/blackhatsV1/western-visayas-region-6-investment-economic-profile
+   cd western-visayas-region-6-investment-economic-profile
+   composer install
+   ```
+
+2. **Environment Setup**:
+   - `cp .env.example .env`
+   - Update your `.env` file with your local MySQL credentials (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
+
+3. **Database Initialization**:
+   ```bash
+   php artisan key:generate
+   php artisan migrate --seed
+   ```
+
+4. **Frontend Build**:
+   ```bash
+   npm install
+   npm run build
+   ```
+
+5. **Start Server**:
+   ```bash
+   php artisan serve
+   ```
+
+The app will be available at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+---
+
+## 📊 Data Management
+
+This project is highly data-driven. The content is managed through seeders:
+
+- **Seeder File**: `database/seeders/ProjectContentSeeder.php`
+- **Re-seeding**: If you update the seeder, run `php artisan db:seed --class=ProjectContentSeeder`.
+
+## 🛠 Tech Stack
+- **Backend**: Laravel 12
+- **Frontend**: Tailwind CSS, Alpine.js, ApexCharts
+- **Maps**: Leaflet.js
+- **Database**: MySQL
+
+## 📄 License
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
