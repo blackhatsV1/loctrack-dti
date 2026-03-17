@@ -16,7 +16,8 @@ Loctrack DTI is a modern workforce visibility solution designed to provide real-
 ## 2. Core Functional Modules
 
 ### A. Real-time Command Center
-- **Live Fleet Map**: Visual distribution of the active workforce using Leaflet.js.
+- **Live Fleet Map**: Visual distribution of the active workforce using Leaflet.js + MarkerCluster.
+- **Dashboard Charts**: Office distribution and employee type breakdowns via Chart.js.
 - **Reporting Feed**: Instant visibility into the latest check-ins across the organization.
 
 ### B. Audit & Compliance Engine

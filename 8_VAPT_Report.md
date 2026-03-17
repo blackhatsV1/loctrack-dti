@@ -14,8 +14,9 @@ This report summarizes the security posture of the **Employee Location Tracking 
 ## 3. Implemented Security Controls
 
 ### A. Authentication & Access Control
-- **PBKDF2/Argon2 Hashing**: Industry-standard encryption for user credentials.
+- **Bcrypt/Argon2 Hashing**: Laravel's default `hashed` cast for secure credential storage.
 - **AdminMiddleware**: Hardened separation of concerns; Employee roles cannot access administrative data.
+- **SecurityHeaders Middleware**: Additional HTTP security headers applied globally.
 - **CSRF & XSS Protection**: Native Laravel shields against web-based injection and forgery.
 
 ### B. Geolocation API Security

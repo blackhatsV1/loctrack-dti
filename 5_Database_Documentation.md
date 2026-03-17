@@ -48,6 +48,9 @@ The core repository for geographical tracking data.
 *   **`migrations`**: Internal version control for the database schema.
 
 ## Key Performance Indexes
-- **`user_history_idx`**: (on `user_id`) Speeds up individual historical queries.
-- **`time_series_idx`**: (on `recorded_at`) Optimizes dashboard activity feeds and time-range reports.
+- **`employee_locations_recorded_at_index`**: Optimizes dashboard activity feeds and time-range reports.
+- **`employee_locations_office_index`**: Speeds up office-based filtering.
+- **`employee_locations_employee_type_index`**: Speeds up type-based distribution queries.
+- **`employee_locations_user_id_recorded_at_index`**: Composite index for efficient per-user history lookups.
+- **`employee_locations_user_id_foreign`**: Foreign key index on `user_id`.
 

@@ -14,13 +14,14 @@ The application follows the **Model-View-Controller (MVC)** architectural patter
 ## Technology Stack
 
 ### Core Frameworks
-- **Backend**: Laravel 11/12
-- **Frontend**: Blade, Alpine.js, Tailwind CSS
+- **Backend**: Laravel 12 (PHP 8.2+)
+- **Frontend**: Blade, Tailwind CSS v4
 - **Database**: MySQL (optimized with indexed time-series data)
 
 ### Specialized Integrations
 - **Maps**: Leaflet.js for interactive geographical plotting.
-- **API**: Geolocation API for coordinate capture.
+- **Charts**: Chart.js for dashboard visualizations.
+- **API**: HTML5 Geolocation API for coordinate capture.
 - **Build System**: Vite for modern asset bundling.
 
 ## Infrastructure & Ops

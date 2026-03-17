@@ -20,7 +20,7 @@
 - **Real-time Snapshots**: Effortless mobile check-ins with high-accuracy GPS.
 - **Interactive Command Center**: Instant visualization of field distribution.
 - **Immutable History**: Comprehensive audit logs for compliance and safety.
-- **Modern Tech**: Built for scale using the Laravel 11/12 ecosystem.
+- **Modern Tech**: Built for scale using the Laravel 12 ecosystem.
 
 ---
 

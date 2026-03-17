@@ -13,6 +13,7 @@ The primary goal of this system is to ensure efficient workforce management, ope
 - **Admin Dashboard**: A comprehensive overview for administrators to see recent location entries, manage user accounts, and monitor field activity.
 - **Location History**: Detailed logs and historical data for each employee, including timestamps, reverse-geocoded addresses, and device info.
 - **Interactive Map Visualization**: Integrated maps (Leaflet.js) for visualizing real-time employee distributions and historical movement patterns.
+- **Data-Driven Insights**: Integration with Chart.js for dynamic data visualizations (office distribution, employee types).
 - **User & Role Management**: Secure authentication and role-based access control (RBAC) ensuring data privacy.
 
 ## Target Audience
@@ -20,5 +21,5 @@ The primary goal of this system is to ensure efficient workforce management, ope
 - **Administrators & Managers**: For logistical oversight, activity monitoring, and safety compliance.
 
 ## Technical Foundation
-Built on **Laravel**, the system leverages modern web technologies (Tailwind CSS, Alpine.js, MySQL) to ensure a robust, scalable, and premium user experience across all devices.
+Built on **Laravel 12**, the system leverages modern web technologies (Tailwind CSS v4, Chart.js, Leaflet.js, MySQL) to ensure a robust, scalable, and premium user experience across all devices.
 

@@ -1,6 +1,6 @@
 # Employee Location Tracking System - Loctrack DTI
 
-A premium, real-time location monitoring and management system for workforce visibility. Built with Laravel, Tailwind CSS, and Alpine.js.
+A premium, real-time location monitoring and management system for workforce visibility. Built with Laravel, Tailwind CSS, and Chart.js.
 
 ---
 
@@ -135,10 +135,12 @@ This project handles employee data and location logs. The initial setup is manag
 - **Re-seeding**: If you update the seeder, run `php artisan db:seed --class=EmployeeLocationSeeder`.
 
 ## 🛠 Tech Stack
-- **Backend**: Laravel 11/12
-- **Frontend**: Tailwind CSS, Alpine.js, Leaflet.js (Maps)
-- **Database**: MySQL / PostgreSQL
+- **Backend**: Laravel 12 (PHP 8.2+)
+- **Frontend**: Tailwind CSS v4, Chart.js
+- **Maps**: Leaflet.js + MarkerCluster
+- **Database**: MySQL
 - **Tracking**: HTML5 Geolocation API
+- **Build**: Vite 7
 
 ## 📄 License
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
