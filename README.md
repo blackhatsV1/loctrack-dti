@@ -33,8 +33,8 @@ This project uses [Laravel Sail](https://laravel.com/docs/sail), a light-weight 
 #### Setup Steps
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/blackhatsV1/western-visayas-region-6-investment-economic-profile
-   cd western-visayas-region-6-investment-economic-profile
+   git clone https://github.com/blackhatsV1/loctrack-dti
+   cd loctrack-dti
    ```
 
 2. **Install dependencies**:
@@ -83,8 +83,8 @@ Use this if you prefer running PHP and MySQL directly on your host machine.
 #### Setup Steps
 1. **Clone and Install**:
    ```bash
-   git clone https://github.com/blackhatsV1/western-visayas-region-6-investment-economic-profile
-   cd western-visayas-region-6-investment-economic-profile
+   git clone https://github.com/blackhatsV1/loctrack-dti
+   cd loctrack-dti
    composer install
    ```
 
