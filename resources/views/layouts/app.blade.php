@@ -526,8 +526,12 @@
         }
 
         document.addEventListener('submit', function(e) {
-            // Don't show for AJAX or specific small forms if needed
-            showGlobalLoader();
+            // Wait a tiny bit to see if the event was cancelled by onsubmit="return confirm(...)"
+            setTimeout(() => {
+                if (!e.defaultPrevented) {
+                    showGlobalLoader();
+                }
+            }, 10);
         });
 
         document.addEventListener('click', function(e) {

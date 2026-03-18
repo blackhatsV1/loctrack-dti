@@ -56,9 +56,6 @@
     <p style="color: var(--text-muted); margin-bottom: 2rem;">Tracking history for <strong>{{ $user->name }}</strong> — {{ $locations->total() }} records</p>
 
     <div class="glass-card" style="padding: 0; overflow-x: auto; position: relative;">
-        <div class="page-loading" id="history-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: rgba(15, 23, 42, 0.82);">
-            <div class="spinner"></div>
-        </div>
         <table class="history-table">
             <thead>
                 <tr>
@@ -81,7 +78,7 @@
                         <td>{{ $loc->address ?? '—' }}</td>
                         <td>{{ $loc->office ?? '—' }}</td>
                         <td>
-                            <button onclick="reuseLocation({{ $loc->id }})" class="btn btn-small" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">
+                            <button type="button" class="btn btn-small reuse-btn" data-url="{{ route('location.reuse', $loc->id) }}" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">
                                 🔄 Reuse
                             </button>
                         </td>
@@ -119,46 +116,46 @@
     </div>
     @endif
 </div>
+@endsection
+
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-            document.getElementById('history-loading')?.classList.add('hidden');
-        }, 500);
-    });
+    document.querySelectorAll('.reuse-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var url = this.getAttribute('data-url');
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    function reuseLocation(id) {
-        if (!confirm('Are you sure you want to reuse this location? This will create a new entry as the current location.')) {
-            return;
-        }
+            btn.disabled = true;
+            btn.textContent = '⏳ Reusing...';
+            if (typeof showGlobalLoader === 'function') showGlobalLoader();
 
-        const loading = document.getElementById('history-loading');
-        loading?.classList.remove('hidden');
-
-        fetch(`/admin/api/location/reuse/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.status === 'success') {
-                alert(res.message);
-                window.location.reload();
-            } else {
-                alert(res.message || 'Error reusing location');
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('An error occurred. Please try again.');
-        })
-        .finally(() => {
-            loading?.classList.add('hidden');
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Failed to reuse location.');
+                    btn.disabled = false;
+                    btn.textContent = '🔄 Reuse';
+                    if (typeof hideGlobalLoader === 'function') hideGlobalLoader();
+                }
+            })
+            .catch(function(err) {
+                alert('Error: ' + err.message);
+                btn.disabled = false;
+                btn.textContent = '🔄 Reuse';
+                if (typeof hideGlobalLoader === 'function') hideGlobalLoader();
+            });
         });
-    }
+    });
 </script>
-@endsection
 @endsection

@@ -15,6 +15,7 @@ class EmployeeLocation extends Model
 
     protected $fillable = [
         'user_id',
+        'type',
         'employee_id_no',
         'address',
         'latitude',

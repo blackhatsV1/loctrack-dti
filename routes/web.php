@@ -26,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('location.store');
 
     Route::get('/history', [LocationController::class, 'history'])->name('location.history');
-    Route::post('/api/location/reuse/{location}', [LocationController::class, 'reuse'])
+    Route::post('/api/location/reuse/{id}', [LocationController::class, 'reuse'])
         ->name('location.reuse');
 });
 

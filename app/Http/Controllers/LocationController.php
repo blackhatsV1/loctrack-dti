@@ -50,9 +50,56 @@ class LocationController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $location = EmployeeLocation::where('user_id', $user->id)->latest('id')->first();
+        $homeLocation = EmployeeLocation::where('user_id', $user->id)
+            ->where(function ($query) {
+                $query->where('type', 'home')
+                      ->orWhere(function ($q) {
+                          $q->whereNull('type')->whereNotNull('address');
+                      });
+            })
+            ->latest('recorded_at')
+            ->first();
+            
+        $officeLocation = EmployeeLocation::where('user_id', $user->id)
+            ->where(function ($query) {
+                $query->where('type', 'office')
+                      ->orWhere(function ($q) {
+                          $q->whereNull('type')->whereNotNull('office');
+                      });
+            })
+            ->latest('recorded_at')
+            ->first();
+
+        // Latest overall record for profile info (ID, Mobile, Type, etc.)
+        $latestLocation = EmployeeLocation::where('user_id', $user->id)
+            ->latest('recorded_at')
+            ->first();
         
-        return view('dashboard', compact('user', 'location'));
+        // Stats & History for the new "Workforce Geography" style dashboard
+        $totalCheckins = EmployeeLocation::where('user_id', $user->id)->count();
+        $recentHistory = EmployeeLocation::where('user_id', $user->id)
+            ->latest('recorded_at')
+            ->take(8)
+            ->get();
+
+        // Activity Data (last 7 days)
+        $activityData = EmployeeLocation::where('user_id', $user->id)
+            ->where('recorded_at', '>=', now()->subDays(7))
+            ->selectRaw('DATE_FORMAT(recorded_at, "%b %d") as date, count(*) as count')
+            ->groupBy('date')
+            ->orderBy('recorded_at')
+            ->get()
+            ->pluck('count', 'date');
+
+        return view('dashboard', compact(
+            'user', 
+            'homeLocation', 
+            'officeLocation', 
+            'latestLocation', 
+            'totalCheckins', 
+            'recentHistory', 
+            'activityData'
+        ));
     }
 
     /**
@@ -72,6 +119,7 @@ class LocationController extends Controller
 
         $data = [
             'user_id' => $user->id,
+            'type' => $request->type,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'recorded_at' => now(),
@@ -115,22 +163,38 @@ class LocationController extends Controller
     /**
      * Reuse a past location to create a new entry.
      */
-    public function reuse(EmployeeLocation $location)
+    public function reuse($id)
     {
         $user = Auth::user();
+        $location = EmployeeLocation::find($id);
+
+        if (!$location) {
+            return response()->json(['status' => 'error', 'message' => 'Location not found'], 404);
+        }
         
         // Admin can reuse for any employee, User can only reuse their own
         if (!$user->is_admin && $location->user_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
         }
 
-        $newLocation = $location->replicate();
-        $newLocation->recorded_at = now();
-        $newLocation->save();
+        try {
+            $newLocation = $location->replicate();
+            $newLocation->recorded_at = now();
+            $newLocation->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Location reused successfully.'
-        ]);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Location reused successfully.'
+                ]);
+            }
+
+            return back()->with('success', 'Location reused successfully.');
+        } catch (\Exception $e) {
+            if (request()->expectsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'Database error'], 500);
+            }
+            return back()->withErrors(['Database error: ' . $e->getMessage()]);
+        }
     }
 }
