@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="animate-fade-in text-center" style="max-width: 800px; margin: 0 auto;">
-    <div style="margin-bottom: 2rem;">
+    <div style="margin-bottom: 2rem; display: flex; justify-content: center; align-items: center;">
         <picture>
             <source srcset="{{ asset('dti-logo.webp') }}" type="image/webp">
             <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" style="height: 100px; width: auto;" decoding="async">
@@ -13,8 +13,8 @@
         <span style="background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Real-Time</span>
     </h1>
     <p class="hero-subtitle" style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 3rem;">
-        The most elegant and reliable way to coordinate your workforce. <br>
-        Glassmorphic interface, Leaflet maps, and seamless tracking.
+        Empowering MSMEs across Western Visayas — <br>
+        DTI Region VI's smart workforce tracking for a stronger local economy.
     </p>
 
     <div class="hero-buttons" style="display: flex; gap: 1.5rem; justify-content: center;">
