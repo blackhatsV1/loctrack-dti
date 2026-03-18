@@ -24,6 +24,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/location', [LocationController::class, 'store'])
         ->middleware('throttle:30,1')
         ->name('location.store');
+
+    Route::get('/history', [LocationController::class, 'history'])->name('location.history');
+    Route::post('/api/location/reuse/{location}', [LocationController::class, 'reuse'])
+        ->name('location.reuse');
 });
 
 // Admin routes (authenticated + admin)

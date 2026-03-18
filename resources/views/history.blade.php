@@ -49,11 +49,11 @@
 @section('content')
 <div class="animate-fade-in">
     <div style="margin-bottom: 2rem;">
-        <a href="{{ route('admin.employees') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">&larr; Back to Employees</a>
+        <a href="{{ route('dashboard') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">&larr; Back to Dashboard</a>
     </div>
 
-    <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Location History</h1>
-    <p style="color: var(--text-muted); margin-bottom: 2rem;">Tracking history for <strong>{{ $user->name }}</strong> — {{ $locations->total() }} records</p>
+    <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Your Location History</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Total of {{ $locations->total() }} recorded entries</p>
 
     <div class="glass-card" style="padding: 0; overflow-x: auto; position: relative;">
         <div class="page-loading" id="history-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: rgba(15, 23, 42, 0.82);">
@@ -119,6 +119,8 @@
     </div>
     @endif
 </div>
+@endsection
+
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -128,14 +130,14 @@
     });
 
     function reuseLocation(id) {
-        if (!confirm('Are you sure you want to reuse this location? This will create a new entry as the current location.')) {
+        if (!confirm('Are you sure you want to reuse this past location? This will create a new entry as your current location.')) {
             return;
         }
 
         const loading = document.getElementById('history-loading');
         loading?.classList.remove('hidden');
 
-        fetch(`/admin/api/location/reuse/${id}`, {
+        fetch(`/api/location/reuse/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -160,5 +162,4 @@
         });
     }
 </script>
-@endsection
 @endsection

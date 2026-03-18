@@ -98,4 +98,39 @@ class LocationController extends Controller
             'message' => ucfirst($request->type) . ' address updated successfully.'
         ]);
     }
+
+    /**
+     * Show the employee's own location history.
+     */
+    public function history()
+    {
+        $user = Auth::user();
+        $locations = EmployeeLocation::where('user_id', $user->id)
+            ->orderBy('recorded_at', 'desc')
+            ->paginate(25);
+
+        return view('history', compact('user', 'locations'));
+    }
+
+    /**
+     * Reuse a past location to create a new entry.
+     */
+    public function reuse(EmployeeLocation $location)
+    {
+        $user = Auth::user();
+        
+        // Admin can reuse for any employee, User can only reuse their own
+        if (!$user->is_admin && $location->user_id !== $user->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $newLocation = $location->replicate();
+        $newLocation->recorded_at = now();
+        $newLocation->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Location reused successfully.'
+        ]);
+    }
 }

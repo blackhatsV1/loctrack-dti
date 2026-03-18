@@ -426,7 +426,6 @@
                     <a href="{{ route('admin.map') }}" class="{{ request()->routeIs('admin.map') ? 'active' : '' }}">Map</a>
                     <span class="nav-badge" onclick="toggleProfileModal()">Admin</span>
                 @else
-                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">My Tracker</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
