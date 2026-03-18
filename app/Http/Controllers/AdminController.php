@@ -167,6 +167,10 @@ class AdminController extends Controller
             ->limit(300)
             ->get();
 
+        // Get all unique offices and types for filters
+        $allOffices = $latestLocations->pluck('office')->unique()->filter()->values();
+        $employeeTypes = $latestLocations->pluck('employee_type')->unique()->filter()->values();
+
         return view('admin.dashboard', compact(
             'totalEmployees', 
             'totalLocations', 
@@ -176,7 +180,9 @@ class AdminController extends Controller
             'recentLocations',
             'offices',
             'officeDistribution',
-            'typeDistribution'
+            'typeDistribution',
+            'allOffices',
+            'employeeTypes'
         ));
     }
 
