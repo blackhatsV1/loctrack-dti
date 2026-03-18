@@ -33,8 +33,10 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
         return view('admin.map');
     })->name('admin.map');
     Route::get('/employees', [AdminController::class, 'index'])->name('admin.employees');
+    Route::post('/employees', [AdminController::class, 'store'])->name('admin.employees.store');
     Route::get('/employees/{user}/edit', [AdminController::class, 'edit'])->name('admin.employees.edit');
     Route::put('/employees/{user}', [AdminController::class, 'update'])->name('admin.employees.update');
+    Route::delete('/employees/{user}', [AdminController::class, 'destroy'])->name('admin.employees.destroy');
     Route::get('/employees/{user}/history', [AdminController::class, 'locationHistory'])->name('admin.employees.history');
 
     Route::get('/api/locations', [LocationController::class, 'index'])->name('location.index');

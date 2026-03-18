@@ -50,6 +50,37 @@ class AdminController extends Controller
     }
 
     /**
+     * Store a new employee.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'mobile_no' => 'required|string|max:20',
+        ]);
+
+        // Create user with a default password
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('password'), // Default password
+            'is_admin' => false,
+        ]);
+
+        // Create initial location record with mobile number
+        EmployeeLocation::create([
+            'user_id' => $user->id,
+            'mobile_no' => $request->mobile_no,
+            'latitude' => 0, // Default or placeholder
+            'longitude' => 0, // Default or placeholder
+            'recorded_at' => now(),
+        ]);
+
+        return redirect()->route('admin.employees')->with('success', "Employee '{$user->name}' added successfully.");
+    }
+
+    /**
      * Show edit form for an employee.
      */
     public function edit(User $user)
@@ -109,6 +140,21 @@ class AdminController extends Controller
             ->paginate(25);
 
         return view('admin.employee-history', compact('user', 'locations'));
+    }
+
+    /**
+     * Remove the specified employee.
+     */
+    public function destroy(User $user)
+    {
+        if ($user->is_admin) {
+            return back()->with('error', 'Cannot delete an admin account.');
+        }
+
+        $name = $user->name;
+        $user->delete();
+
+        return redirect()->route('admin.employees')->with('success', "Employee '{$name}' deleted successfully.");
     }
 
     /**
