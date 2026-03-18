@@ -60,11 +60,20 @@ class AdminController extends Controller
             'mobile_no' => 'required|string|max:20',
         ]);
 
-        // Create user with a default password
+        $name = trim($request->name);
+        if (str_contains($name, ',')) {
+            $lastName = trim(explode(',', $name)[0]);
+        } else {
+            $parts = explode(' ', $name);
+            $lastName = trim(end($parts));
+        }
+        $password = $lastName . '@dti06';
+
+        // Create user with the new default password
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('password'), // Default password
+            'password' => Hash::make($password),
             'is_admin' => false,
         ]);
 
