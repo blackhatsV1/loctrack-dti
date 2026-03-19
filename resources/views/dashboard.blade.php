@@ -159,6 +159,7 @@
         .geography-grid { grid-template-columns: 1fr; }
     }
 
+
     .instruction-overlay {
         position: absolute;
         bottom: 2rem;
@@ -190,11 +191,6 @@
                 Welcome back, <span style="color: var(--text-light); font-weight: 600;">{{ $user->name }}</span>. Here is your tracking geography.
             </p>
         </div>
-        <div style="display: flex; gap: 1rem;">
-            <button type="button" id="checkin-btn" onclick="performCheckin()" class="btn-primary" style="padding: 0.75rem 1.5rem;">
-                📍 Quick Check-in
-            </button>
-        </div>
     </div>
 
     <!-- Stats Row -->
@@ -219,12 +215,12 @@
                     <span class="address-label">🏠 Home Base</span>
                     
                     <div id="home-display">
-                        <div class="address-text">{{ $homeLocation->address ?? 'No home address setup yet.' }}</div>
+                        <div class="address-text">{{ $homeLocation?->address ?? 'No home address setup yet.' }}</div>
                         <button class="btn-small btn-secondary" style="width: 100%;" onclick="toggleEdit('home', true, event)">Update Location</button>
                     </div>
 
                     <div id="home-edit" style="display: none;">
-                        <input type="text" id="home-address-input" class="form-control" style="margin-bottom: 1rem;" placeholder="Enter address..." value="{{ $homeLocation->address ?? '' }}">
+                        <input type="text" id="home-address-input" class="form-control" style="margin-bottom: 1rem;" placeholder="Enter address..." value="{{ $homeLocation?->address ?? '' }}">
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn-small" style="background: var(--primary);" onclick="togglePinMode('home', event)">📍 Pin</button>
                             <button class="btn-small" style="flex:1;" onclick="saveAddress('home', event)">Save</button>
@@ -240,12 +236,12 @@
                     <span class="address-label">🏢 Office Assignment</span>
                     
                     <div id="office-display">
-                        <div class="address-text">{{ $officeLocation->office ?? 'No office assigned yet.' }}</div>
+                        <div class="address-text">{{ $officeLocation?->office ?? 'No office assigned yet.' }}</div>
                         <button class="btn-small btn-secondary" style="width: 100%;" onclick="toggleEdit('office', true, event)">Update Role</button>
                     </div>
 
                     <div id="office-edit" style="display: none;">
-                        <input type="text" id="office-address-input" class="form-control" style="margin-bottom: 1rem;" placeholder="Enter office name/address..." value="{{ $officeLocation->office ?? '' }}">
+                        <input type="text" id="office-address-input" class="form-control" style="margin-bottom: 1rem;" placeholder="Enter office name/address..." value="{{ $officeLocation?->office ?? '' }}">
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn-small" style="background: #c084fc;" onclick="togglePinMode('office', event)">📍 Pin</button>
                             <button class="btn-small" style="flex:1;" onclick="saveAddress('office', event)">Save</button>
@@ -452,6 +448,7 @@
         }
     }
 
+
     function toggleEdit(type, show, event) {
         if (event) event.stopPropagation();
         document.getElementById(type + '-display').style.display = show ? 'none' : 'block';
@@ -502,18 +499,6 @@
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
             body: JSON.stringify({ type, address, latitude: lat, longitude: lng })
         }).then(r => r.ok ? window.location.reload() : alert('Failed to save.'));
-    }
-
-    function performCheckin() {
-        if (!currentCoords) return alert('Acquiring location...');
-        const btn = document.getElementById('checkin-btn');
-        btn.disabled = true; btn.textContent = 'Updating...';
-
-        fetch('{{ route("location.store") }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: JSON.stringify({ latitude: currentCoords.lat, longitude: currentCoords.lng })
-        }).then(r => r.ok ? window.location.reload() : (btn.disabled = false, btn.textContent = 'Retry Check-in'));
     }
 </script>
 @endsection

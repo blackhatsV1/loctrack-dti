@@ -194,6 +194,12 @@ class AdminController extends Controller
             ->with('user')
             ->get();
 
+        // Filter for "Online" users (active in last 24 hours for testing)
+        $activeThreshold = now()->subHours(24);
+        $onlineUsers = User::where('is_admin', false)
+            ->where('last_activity_at', '>=', $activeThreshold)
+            ->get();
+
         $offices = $latestLocations->pluck('office')->unique()->filter()->values();
         $totalOffices = $offices->count();
 
@@ -237,7 +243,8 @@ class AdminController extends Controller
             'officeDistribution',
             'typeDistribution',
             'allOffices',
-            'employeeTypes'
+            'employeeTypes',
+            'onlineUsers'
         ));
     }
 

@@ -25,6 +25,9 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('throttle:30,1')
         ->name('location.store');
 
+    Route::post('/api/broadcast', [LocationController::class, 'broadcast'])
+        ->name('location.broadcast');
+
     Route::get('/history', [LocationController::class, 'history'])->name('location.history');
     Route::post('/api/location/reuse/{id}', [LocationController::class, 'reuse'])
         ->name('location.reuse');

@@ -197,4 +197,33 @@ class LocationController extends Controller
             return back()->withErrors(['Database error: ' . $e->getMessage()]);
         }
     }
+
+    /**
+     * Automatically broadcast current location.
+     */
+    public function broadcast(Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $user = Auth::user();
+        $latest = EmployeeLocation::where('user_id', $user->id)->latest('recorded_at')->first();
+
+        EmployeeLocation::create([
+            'user_id' => $user->id,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'recorded_at' => now(),
+            'address' => $latest?->address,
+            'office' => $latest?->office,
+            'employee_id_no' => $latest?->employee_id_no,
+            'mobile_no' => $latest?->mobile_no,
+            'employee_type' => $latest?->employee_type,
+            'type' => 'broadcast',
+        ]);
+
+        return response()->json(['status' => 'success']);
+    }
 }

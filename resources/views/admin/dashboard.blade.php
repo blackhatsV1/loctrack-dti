@@ -266,6 +266,27 @@
             <div style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Global View</div>
         </a>
     </div>
+    
+    <!-- Online Presence Section -->
+    <div class="glass-card animate-fade-in" style="margin-bottom: 2rem;">
+        <div style="margin-bottom: 1.5rem;">
+            <h2 style="margin-bottom: 0.25rem;">📡 Online Personnel</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Employees currently active within the last 15 minutes.</p>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+            @forelse($onlineUsers as $onlineUser)
+                <div class="glass-card" style="padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; border-color: rgba(52, 211, 153, 0.2); background: rgba(52, 211, 153, 0.05);">
+                    <div class="pulse-dot" style="background: #34d399; width: 8px; height: 8px;"></div>
+                    <span style="font-weight: 600; font-size: 0.95rem;">{{ $onlineUser->name }}</span>
+                </div>
+            @empty
+                <div style="padding: 2rem; text-align: center; width: 100%; color: var(--text-muted); border: 1px dashed var(--glass-border); border-radius: 1rem;">
+                    No employees are currently online.
+                </div>
+            @endforelse
+        </div>
+    </div>
 
     <!-- Workforce Geography Card -->
     <div class="glass-card animate-fade-in" style="margin-bottom: 2rem;">
@@ -646,6 +667,7 @@
         // Redraw charts if needed, Chart.js handles most of it via responsive: true
     });
 
+
     // --- Workforce Geography Logic ---
     let minimap, markerCluster;
     const employeeMarkers = {};
@@ -835,4 +857,17 @@
         initMinimap();
     });
 </script>
+
+    <!-- Debug Online Status (Admin only) -->
+    <div class="glass-card" style="margin-top: 2rem; border-color: rgba(255, 255, 255, 0.05); background: rgba(0, 0, 0, 0.2); padding: 1rem;">
+        <h4 style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">🛠 Debug: User Activity</h4>
+        <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;">
+            @foreach(App\Models\User::where('is_admin', false)->get() as $u)
+                <div>{{ $u->name }}: {{ $u->last_activity_at ? $u->last_activity_at->toDateTimeString() : 'NEVER' }}</div>
+            @endforeach
+            <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 5px;">
+                Server Now: {{ now()->toDateTimeString() }}
+            </div>
+        </div>
+    </div>
 @endsection
