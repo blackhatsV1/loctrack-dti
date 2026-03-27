@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>DTI | Employee Locator</title>
+    <title>Preparedness, Safety & Continuity Portal</title>
     <link rel="icon" type="image/png" href="{{ asset('dti-logo.png') }}">
     <!-- PWA -->
     <link rel="manifest" href="{{ asset('manifest.json') }}">
@@ -416,7 +416,7 @@
                 <source srcset="{{ asset('dti-logo.webp') }}" type="image/webp">
                 <img src="{{ asset('dti-logo.png') }}" alt="DTI Logo" class="logo-img" width="40" height="40" decoding="async">
             </picture>
-            <span class="logo-text">LocTrack Pro</span>
+            <span class="logo-text">PSCP Workforce Locator</span>
         </a>
         <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('mobile-open')" aria-label="Toggle navigation">☰</button>
         <div class="nav-links" id="nav-links">
