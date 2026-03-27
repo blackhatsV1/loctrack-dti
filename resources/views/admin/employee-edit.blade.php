@@ -133,6 +133,30 @@
         background: rgba(255,255,255,0.15);
         border-radius: 2px;
     }
+    .searchable-select .ss-option.others-option {
+        border-top: 1px solid rgba(255,255,255,0.08);
+        color: #a5b4fc;
+        font-style: italic;
+    }
+    .ss-custom-input {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        border-radius: 0.5rem;
+        background: rgba(0,0,0,0.25);
+        border: 1px solid var(--glass-border);
+        color: white;
+        font-size: 0.9rem;
+        font-family: 'Outfit', sans-serif;
+        margin-top: 0.5rem;
+    }
+    .ss-custom-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+    }
+    .ss-custom-input::placeholder {
+        color: rgba(255,255,255,0.35);
+    }
 
     @media (max-width: 768px) {
         .form-grid {
@@ -187,7 +211,12 @@
                             @foreach($employeeTypes as $type)
                                 <div class="ss-option" data-value="{{ $type }}">{{ $type }}</div>
                             @endforeach
+                            @unless($employeeTypes->contains('Intern'))
+                                <div class="ss-option" data-value="Intern">Intern</div>
+                            @endunless
+                            <div class="ss-option others-option" data-value="__others__">Others (specify manually)</div>
                         </div>
+                        <input type="text" class="ss-custom-input" style="display:none;" placeholder="Type custom employee type...">
                     </div>
                 </div>
             </div>
@@ -213,7 +242,9 @@
                             @foreach($offices as $office)
                                 <div class="ss-option" data-value="{{ $office }}">{{ $office }}</div>
                             @endforeach
+                            <div class="ss-option others-option" data-value="__others__">Others (specify manually)</div>
                         </div>
+                        <input type="text" class="ss-custom-input" style="display:none;" placeholder="Type custom office name...">
                     </div>
                 </div>
 
@@ -251,11 +282,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set initial display value from hidden input
         if (hidden.value) {
-            input.value = hidden.value;
-            input.classList.add('has-value');
-            options.forEach(opt => {
-                opt.classList.toggle('selected', opt.dataset.value === hidden.value);
-            });
+            const matchingOpt = options.find(opt => opt.dataset.value === hidden.value);
+            if (matchingOpt) {
+                input.value = hidden.value;
+                input.classList.add('has-value');
+                matchingOpt.classList.add('selected');
+            } else {
+                // Value exists but not in options list — show as Others
+                input.value = 'Others';
+                input.classList.add('has-value');
+                if (container.querySelector('.ss-custom-input')) {
+                    const ci = container.querySelector('.ss-custom-input');
+                    ci.style.display = '';
+                    ci.value = hidden.value;
+                }
+            }
         }
 
         function open() {
@@ -266,17 +307,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function close() {
             container.classList.remove('open');
-            // Restore display to selected value
-            input.value = hidden.value;
+            const ci = container.querySelector('.ss-custom-input');
+            if (ci && ci.style.display !== 'none') {
+                input.value = 'Others';
+            } else {
+                input.value = hidden.value;
+            }
             highlightedIdx = -1;
         }
 
+        const customInput = container.querySelector('.ss-custom-input');
+
         function selectOption(value, text) {
+            if (value === '__others__') {
+                // Show custom input, clear hidden for now
+                hidden.value = '';
+                input.value = 'Others';
+                input.classList.add('has-value');
+                container.classList.remove('open');
+                if (customInput) {
+                    customInput.style.display = '';
+                    customInput.value = '';
+                    customInput.focus();
+                }
+                return;
+            }
+            if (customInput) customInput.style.display = 'none';
             hidden.value = value;
             input.value = text;
             input.classList.toggle('has-value', !!value);
             options.forEach(opt => opt.classList.toggle('selected', opt.dataset.value === value));
             close();
+        }
+
+        // Custom input writes directly to hidden field
+        if (customInput) {
+            customInput.addEventListener('input', function() {
+                hidden.value = this.value;
+            });
         }
 
         function filterOptions(query) {
