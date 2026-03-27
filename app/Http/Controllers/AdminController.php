@@ -96,7 +96,16 @@ class AdminController extends Controller
     public function edit(User $user)
     {
         $location = EmployeeLocation::where('user_id', $user->id)->latest('id')->first();
-        return view('admin.employee-edit', compact('user', 'location'));
+
+        $offices = EmployeeLocation::select('office')->distinct()
+            ->whereNotNull('office')->where('office', '!=', '')
+            ->orderBy('office')->pluck('office');
+
+        $employeeTypes = EmployeeLocation::select('employee_type')->distinct()
+            ->whereNotNull('employee_type')->where('employee_type', '!=', '')
+            ->orderBy('employee_type')->pluck('employee_type');
+
+        return view('admin.employee-edit', compact('user', 'location', 'offices', 'employeeTypes'));
     }
 
     /**
